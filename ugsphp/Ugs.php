@@ -142,9 +142,6 @@ class Ugs{
         		case Actions::AjaxUpdateSong:
 	        		$builder = new Ajax_UpdateSong_Vmb();
 		        	break;
-			case Actions::PrintSongbook:
-				$builder = new PrintSongList_Vmb();
-				break;
 		        default:
         			$builder = Config::UseDetailedLists
 					? new SongListDetailed_Vmb()
