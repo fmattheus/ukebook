@@ -71,7 +71,7 @@ class Ugs{
 	 */
 	private function DoAuthenticate( $action ) {
 
-		if (! Config::IsLoginRequired ) {
+		if ( (! Config::IsLoginRequired ) || ( $action == Actions::Reindex ) ) {
 			$user = new SiteUser();
 			$user->IsAllowAccess = true;
 			return  $user;
@@ -136,14 +136,17 @@ class Ugs{
 			case Actions::Login:
 				$builder = new Login_Vmb();
 				break;
-		case Actions::AjaxNewSong:
-			$builder = new Ajax_NewSong_Vmb();
-			break;
-		case Actions::AjaxUpdateSong:
-			$builder = new Ajax_UpdateSong_Vmb();
-			break;
-			default:
-				$builder = Config::UseDetailedLists
+        		case Actions::AjaxNewSong:
+	        		$builder = new Ajax_NewSong_Vmb();
+		        	break;
+        		case Actions::AjaxUpdateSong:
+	        		$builder = new Ajax_UpdateSong_Vmb();
+		        	break;
+			case Actions::PrintSongbook:
+				$builder = new PrintSongList_Vmb();
+				break;
+		        default:
+        			$builder = Config::UseDetailedLists
 					? new SongListDetailed_Vmb()
 					: new SongList_Vmb();
 				break;

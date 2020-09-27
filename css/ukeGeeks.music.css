@@ -23,7 +23,7 @@
 	font-size: inherit;
 	font-style:normal;
 	float: none;
-	line-height:1;
+        line-height: 1;
 	text-align:left;
 	margin:0;
 	padding:0;
@@ -48,7 +48,7 @@
 	height: 0;
 }
 .ugs-grouped {
-	display: block;
+	display: inline-block;
 }
 .ugs-grouped {
 .display: inline-block;
@@ -63,10 +63,21 @@
   ------------------------------ */
 .ugsLayoutTwoColumn .ugs-diagrams-wrap {
 	float:left;
-	width:225px;
+	width:210px;
 }
+
+/* Frank: added a new element for when it is on the left, then position = fixed */
+.diagramsOnLeft .ugsLayoutTwoColumn .ugs-diagrams-wrap {
+	float:left;
+	width:210px;
+        position: fixed;
+}
+/* Frank: added a new element for when it is on the left, then position = fixed */
+.diagramsOnRight .ugsLayoutTwoColumn .ugs-diagrams-wrap {
+	margin-left:0px;
+}*/
 .ugsLayoutTwoColumn .ugs-source-wrap {
-	margin-left:250px;
+	margin-left:265px;
 }
 /* CHORD CANVAS (BLOCKS)
   ------------------------------ */
@@ -83,14 +94,14 @@
   ------------------------------ */
 .ugs-source-wrap h5,
 .ugs-source-wrap h6 {
-	border-left:solid .5em #CCC;
+/*	border-left:solid .5em #CCC;*/
 	color:#036;
 	font-family:Georgia, "Times New Roman", Times, serif;
 	font-size:1.2em;
 	font-style:italic;
 	line-height:1;
-	margin:.4em 0 1em;
-	padding:.2em 0;
+	margin:.2em 0px;
+	padding:.2em 0px;
 	text-indent:2.3em;
 }
 .ugs-source-wrap h6 {
@@ -102,11 +113,11 @@
 .ugs-source-wrap pre {
 	color:#333;
 	font-family:inherit;
-	padding-top:0.4em;
+	padding-top:0em;
 	white-space:pre;
 }
 .ugs-source-wrap pre + h6 {
-	margin-top: 2.5em;
+	margin-top: 0.8em; /* Frank: changed from 2.5em, sets the space above a comment */
 }
 .ie .ugs-source-wrap pre {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
@@ -115,24 +126,34 @@
   ------------------------------ */
 .ugs-song-wrap .ugsChorus {
 	border-left:solid 3px #ddd;
-	margin:1em 0 2.3em;
+	margin:1em 0 1.5em; /* Frank: changed from 2.3em, sets the space below blocks */
+        page-break-inside : avoid;
 }
 .ugsChorus pre {
 	margin-left:1em;
 }
 .ie .ugsChorus h6,
 .ugsChorus > h6 {
-	font-size:1.2em;
+	font-size:0.9em;
 	text-indent:.4em;
 }
 .ugs-song-wrap pre + .ugsChorus {
-	margin-top:3.5em;
+	margin-top:1.5em; /* Frank: changed from 3.5, sets the space above blocks */
+}
+.ugs-song-wrap .ugsVerse {
+        page-break-inside : avoid;
+}
+.ugs-song-wrap .ugsComment {
+        page-break-after : avoid;
 }
 /* TABS
   ------------------------------ */
 .ugs-song-wrap .ugsTabs {
-	margin:0;
+	margin:0.6em;
 	padding:0;
+        font-family: "monospace";
+        font-size: 12pt;
+        page-break-inside : avoid;
 }
 .ugs-song-wrap .ugsTabs + .ugsPlain {
 	margin:0 0 1em;
@@ -144,7 +165,8 @@
 /* PLACE CHORDS ABOVE TEXT
   ------------------------------ */
 .ugs-song-wrap .ugsChords {
-	line-height:3;
+	line-height:1.8;
+        white-space: pre;
 }
 .ugsChords code {
 	color:#efefef;
@@ -160,15 +182,20 @@
 	color:#f2f2f2;
 	display: inline;
 	vertical-align: inherit;
+	line-height:unset;
 }
 .ugsChords code strong {
 	left:-4px;
 	position:absolute;
 	top:-2em;
+        color:#0000d2; /*Frank: Color of Chord Brackets */
+        visibility: hidden;
+	line-height:2.2;
 }
 .ugsChords code em {
-	color:#d20;
-	margin:0 -3px;
+	color:#0000d2;  /* Frank: Colour of Chord */
+/*	margin:0 -3px; */  /*Removed by Frank: If no brackets, then leave some space after chord, if brackets, then bracket is in correct position */
+        visibility: initial;
 }
 .ie .ugsChords {
 	line-height:2.6;
@@ -180,19 +207,25 @@
 }
 /* SHOW CHORD NAMES INLINE
   ------------------------------ */
+.ugs-song-wrap .ugsInline .ugsChords,
 .ugs-song-wrap .ugsInline,
 .ugs-song-wrap .ugsInline pre,
 .ugs-song-wrap.ugsInline pre /* added for Editor Plus -- required? */
 {
-	line-height:1.8;
+	line-height:1.2;
+        white-space: pre-wrap;
 }
 .ugsInline code {
-	padding-left:.1em;
+/*	padding-left:.1em; */ /*Removed by Frank: I like the Chords to be left alligned */
+	padding-right:.1em;
 }
 .ugsInline code strong {
 	position:relative;
 	top:auto;
 	left:auto;
+        color:#0000d2; /* Frank: Colour of Chord Brackets */
+        visibility: visible;
+        line-height: 1;
 }
 /* PLAIN (lyrics only) Blocks
   ------------------------------ */
@@ -203,7 +236,7 @@
   ------------------------------ */
 .ugs-song-wrap .ugsNoLyrics {
 	line-height:2;
-	padding:0 0 1.2em;
+	padding:0px;
 }
 .ugsNoLyrics + h6 {
 	margin-top:.5em;

@@ -1240,15 +1240,15 @@ ukeGeeks.transpose = (function() {
 	var re = /^([A-G][#b]?)(.*)/;
 	var tones = {
 		'A': 0,
-		'A#': 1,
 		'Bb': 1,
+		'A#': 1,
 		'B': 2,
 		'C': 3,
 		'C#': 4,
 		'Db': 4,
 		'D': 5,
-		'D#': 6,
 		'Eb': 6,
+		'D#': 6,
 		'E': 7,
 		'F': 8,
 		'F#': 9,
@@ -1557,6 +1557,7 @@ ukeGeeks.definitions.sopranoUkuleleGcea = [
 	// -------------------------------------------------------
 	'{define: C-F frets 2 0 1 3}',
 	'{define: D/A frets 2 2 2 0}',
+	'{define: D7alt frets 2 0 2 0}',
 	'{define: Dm/C frets 2 2 1 3}',
 	'{define: Fm7/C frets 1 3 1 3}',
 	'{define: G/B frets 0 2 3 2}',
@@ -2096,6 +2097,7 @@ ukeGeeks.cpmParser = function() {
 	_public.parse = function(text) {
 		var song = new ukeGeeks.data.song();
 		text = _stripHtml(text);
+		text = _highlight(text);
 		var songDom = _domParse(text);
 		songDom = _parseInstr(songDom);
 		songDom = _parseSimpleInstr(songDom);
@@ -2158,9 +2160,10 @@ ukeGeeks.cpmParser = function() {
 		$regEx = "/{(ukegeeks-meta|meta)\s*:\s*(.+?)}/i";
 	*/
 	var _regEx = {
-		blocks: /\s*{\s*(start_of_tab|sot|start_of_chorus|soc|end_of_tab|eot|end_of_chorus|eoc)\s*}\s*/im,
+		blocks: /\s*{\s*(start_of_tab|sot|start_of_chorus|soc|sov|end_of_tab|eot|end_of_chorus|eoc|eov)\s*}\s*/im,
 		tabBlock: /\s*{\s*(start_of_tab|sot)\s*}\s*/im,
-		chorusBlock: /\s*{\s*(start_of_chorus|soc)\s*}\s*/im
+		chorusBlock: /\s*{\s*(start_of_chorus|soc)\s*}\s*/im,
+		verseBlock: /\s*{\s*sov\s*}\s*/im
 	};
 
 	/**
@@ -2173,8 +2176,10 @@ ukeGeeks.cpmParser = function() {
 		Comment: 'ugsComment',
 		Tabs: 'ugsTabs',
 		Chorus: 'ugsChorus',
+		Verse: 'ugsVerse',
 		PreChords: 'ugsChords', // preformatted with chords
-		PrePlain: 'ugsPlain', // preformated, no chords
+//		PrePlain: 'ugsPlain', // preformated, no chords
+		PrePlain: 'ugsChords', // preformated, no chords
 		NoLyrics: 'ugsNoLyrics', // preformated, chords ONLY -- no lyrics (text) between 'em
 		ColumnWrap: 'ugsWrap',
 		ColumnCount: 'ugsColumnCount',
@@ -2193,6 +2198,7 @@ ukeGeeks.cpmParser = function() {
 		TextBlock: 1, // temporary type, should be replaced with Chord Text or Plain Text
 		ChorusBlock: 2,
 		TabBlock: 3,
+		VerseBlock: 4,
 		// Single Line "Instruction" Nodes
 		Comment: 101,
 		Title: 102,
@@ -2223,6 +2229,9 @@ ukeGeeks.cpmParser = function() {
 		// TODO: verify line's type in documentation
 		if (_regEx.chorusBlock.test(line)) {
 			return _blockTypeEnum.ChorusBlock;
+		}
+		if (_regEx.verseBlock.test(line)) {
+			return _blockTypeEnum.VerseBlock;
 		}
 		else if (_regEx.tabBlock.test(line)) {
 			return _blockTypeEnum.TabBlock;
@@ -2283,6 +2292,11 @@ ukeGeeks.cpmParser = function() {
 			}
 			else if (song[i].type == _blockTypeEnum.ChorusBlock) {
 				html += '<div class="' + _classNames.Chorus + '">' + nl;
+				html += _export(song[i].lines);
+				html += '</div>' + nl;
+			}
+			else if (song[i].type == _blockTypeEnum.VerseBlock) {
+				html += '<div class="' + _classNames.Verse + '">' + nl;
 				html += _export(song[i].lines);
 				html += '</div>' + nl;
 			}
@@ -2353,7 +2367,8 @@ ukeGeeks.cpmParser = function() {
 				}
 			}
 			else {
-				var s = ukeGeeks.toolsLite.trim(lines[i]);
+//				var s = ukeGeeks.toolsLite.trim(lines[i]);
+				var s = lines[i];
 				if (s.length > 0) {
 					tmpBlk.lines.push(s);
 				}
@@ -2492,7 +2507,7 @@ ukeGeeks.cpmParser = function() {
 			line;
 
 		for (var i in song) {
-			if ((song[i].type != _blockTypeEnum.TextBlock) && (song[i].type != _blockTypeEnum.ChorusBlock)) {
+			if ((song[i].type != _blockTypeEnum.TextBlock) && (song[i].type != _blockTypeEnum.ChorusBlock) && (song[i].type != _blockTypeEnum.VerseBlock)) {
 				continue;
 			}
 			for (var j in song[i].lines) {
@@ -2559,6 +2574,37 @@ ukeGeeks.cpmParser = function() {
 			htmlComment: /<!--(.|\n)*?-->/gm // HTML <!-- Comment -->
 		};
 		return text.replace(regEx.pre, '').replace(regEx.htmlComment, '');
+	};
+
+	/**
+	 * Adds functionality for highlight commands
+	 * @method _highlight
+	 * @private
+	 * @param text {string}
+	 * @return {string}
+         * {soh} – Yellow  {eoh}
+         * {sohr} – Red (Tomato) {eoh}
+         * {sohb} – Blue (Cyan) {eoh}
+         * {sohg} – Green (Yellow/Green) {eoh}
+         * {sohp} – Pink {eoh}
+         * {sohy} – Grey (LightGrey) {eoh}
+         * {soho} – Orange {eoh}
+         * {sob} – Text to bolden up {eob}
+         * {sog} – Grey text {eog}
+         * {soi} – Text to italicise {eoi}
+         * <mark style="
+	 */
+	var _highlight = function(text) {
+		return text.replace(/{soh}/g, "<mark>").replace(/{eoh}/g, "</mark>").
+                    replace(/{sohr}/g, "<mark style=\"background-color:tomato;\">").replace(/{eohr}/g, "</mark>").
+                    replace(/{sohb}/g, "<mark style=\"background-color:cyan;\">").replace(/{eohb}/g, "</mark>").
+                    replace(/{sohg}/g, "<mark style=\"background-color:yellowgreen;\">").replace(/{eohg}/g, "</mark>").
+                    replace(/{sohp}/g, "<mark style=\"background-color:Pink;\">").replace(/{eohp}/g, "</mark>").
+                    replace(/{sohy}/g, "<mark style=\"background-color:lightgrey;\">").replace(/{eohy}/g, "</mark>").
+                    replace(/{soho}/g, "<mark style=\"background-color:Orange;\">").replace(/{eoho}/g, "</mark>").
+                    replace(/{sob}/g, "<b>").replace(/{eob}/g, "</b>").
+                    replace(/{sog}/g, "<font color=\"Grey\">").replace(/{eog}/g, "</font>").
+                    replace(/{soi}/g, "<i>").replace(/{eoi}/g, "</i>");
 	};
 
 	/* return our public interface */
@@ -2785,7 +2831,7 @@ ukeGeeks.tabs = function() {
 	 * @param h {DOM-element}
 	 * @return {void}
 	 */
-	var replace= function(h) {
+/*	var replace= function(h) {
 		var tabBlocks = h.getElementsByTagName('pre');
 		for (var i in tabBlocks) {
 			if (tabBlocks[i].className == 'ugsTabs') {
@@ -2795,7 +2841,7 @@ ukeGeeks.tabs = function() {
 			}
 		}
 	};
-
+*/
 	/**
 	 *
 	 * @method loadBlocks
@@ -3178,8 +3224,7 @@ ukeGeeks.tabs = function() {
 
 	/* return our public interface */
 	return {
-		init: init,
-		replace: replace
+		init: init
 	};
 };
 
@@ -3453,7 +3498,7 @@ ukeGeeks.scriptasaurus = (function() {
 		// Do Tablature:
 		var tabs = new ukeGeeks.tabs();
 		tabs.init();
-		tabs.replace(handles.text);
+//		tabs.replace(handles.text);
 
 		// error reporting:
 		_errList.push(painter.getErrors());

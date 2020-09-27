@@ -1132,7 +1132,7 @@ html .reformatDlg textarea {
 	font-size: 1.2em;
 }
 .theme-frosty .scalablePrintArea h5, .theme-frosty .scalablePrintArea h6 {
-	border-left-color: #e3f7f3;
+	border-left-color: #00ff00;
 	color: #80b7b1;
 	font-family: 'Cherry Cream Soda', cursive, sans-serif;
 	font-size: 1.4em;
@@ -1253,6 +1253,7 @@ html .reformatDlg textarea {
 	-moz-box-shadow: 3px 0 9px rgba(0,0,0,0.4);
 	-webkit-box-shadow: 3px 0 9px rgba(0,0,0,0.4);
 	box-shadow: 3px 0 9px rgba(0,0,0,0.4);
+        margin-bottom: 25%;
 }
 .scalablePrintArea hgroup {
 	padding-bottom: .15in;
@@ -1273,12 +1274,19 @@ html .diagramsOnTop .ugs-source-wrap {
 .ugsNoChords .ugs-source-wrap {
 	margin-left: 0;
 }
-.diagramsOnSide .ugs-diagrams-wrap {
+.diagramsOnRight .ugs-diagrams-wrap {
+	float: right;
+	width: 75px;
+}
+.diagramsOnRight .ugs-source-wrap {
+	margin-right: 90px;
+}
+.diagramsOnLeft .ugs-diagrams-wrap {
 	float: left;
 	width: 225px;
 }
-.diagramsOnSide .ugs-source-wrap {
-	margin-left: 250px;
+.diagramsOnLeft .ugs-source-wrap {
+	margin-left: 210px;
 }
 .liBtn, .liBtn * {
 	cursor: pointer;

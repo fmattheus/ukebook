@@ -33,7 +33,7 @@ class FileHelper {
 			// die($errPrefix." &quot;".$fname."&quot; not found.");
 		}
 		$fh = fopen($fname, 'r');
-		$data = fread($fh, Config::MaxFileSize);
+                $data = mb_convert_encoding(fread($fh, Config::MaxFileSize), mb_internal_encoding(), Config::FileCharset); 
 		fclose($fh);
 		return $data;
 	}

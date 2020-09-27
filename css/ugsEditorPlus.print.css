@@ -6,6 +6,9 @@
 	body {
 		padding: 1px 0 0 0;
 	}
+	footer {
+		display: none;
+	}
 	.scalablePrintArea {
 		background-color: transparent;
 		border: none;
@@ -20,4 +23,44 @@
 	.overlay {
 		display: none !important;
 	}
+        .diagramsOnLeft .ugsLayoutTwoColumn .ugs-diagrams-wrap {
+            float: right;
+            width: 160px;
+            position: relative;
+        }
+        .diagramsOnLeft .ugsLayoutTwoColumn .ugs-source-wrap {
+            margin-left: 0;
+            margin-right: unset;
+            overflow: visible;
+        }
+        .ugs-source-wrap {
+            margin-left: 0;
+            margin-right: unset;
+            font-size: 18pt;
+        }
+        .scalablePrintArea {
+            margin-bottom: 0;
+        }
+        /* Chord bracket formatting
+         * ----------------------------- */
+        .ugsInline code strong {
+                color:red;
+                font-weight: bold;
+        }
+        /* Chord formatting
+         * ----------------------------- */
+        .ugsInline .ugsChords code em {
+        	color:red;
+                font-weight: bold;
+        }
+        .ugsChords code em {
+        	color:blue;
+                font-weight: normal;
+        }
+        .ugs-grouped {
+                display: inline-block;
+        }
+        .ugs-source-wrap h6 {
+            line-height: 1.2;
+        }
 }

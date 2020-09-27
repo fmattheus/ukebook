@@ -19,11 +19,11 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 <script type="text/javascript" src="//explorercanvas.googlecode.com/svn/trunk/excanvas.js"></script>
 <link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/ugsEditorPlus.legacyIe.css" />
 <![endif]-->
-<link href='http://fonts.googleapis.com/css?family=Peralta|Smokum|Cherry+Cream+Soda|Ranchers|Creepster|Lobster|Permanent+Marker|Architects+Daughter|Bree+Serif' rel='stylesheet' type='text/css' />
+<link href='https://fonts.googleapis.com/css?family=Peralta|Smokum|Cherry+Cream+Soda|Ranchers|Creepster|Lobster|Permanent+Marker|Architects+Daughter|Bree+Serif' rel='stylesheet' type='text/css' />
 <link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/yuiReset.css" />
 <link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/basic-page-layout.css" />
 <link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/ukeGeeks.music.css" />
-<link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/ugsEditorPlus.min.css" title="ugsEditorCss" />
+<link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/ugsEditorPlus.merged.css" title="ugsEditorCss" />
 <link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/ugsEditorPlus.print.css" media="print" />
 </head>
 <body class="editableSongPage pageWidth_screen">
@@ -107,17 +107,18 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 			<dt><label for="diagramSizePicker"><span>Stupid Large diagrams</span> <em>&#9658;</em></label></dt>
 			<dd id="diagramSizePicker" data-action="zoomDiagrams">
 				<ul class="pseudoSelect">
-					<li><a href="#40">Tiny </a></li>
-					<li><a href="#65">Small </a></li>
-					<li><a href="#80">Medium </a></li>
-					<li><a href="#90">Large </a></li>
+					<li><a href="#35">Tiny </a></li>
+					<li><a href="#45">Small </a></li>
+					<li><a href="#65">Medium </a></li>
+					<li><a href="#80">Large </a></li>
 					<li class="checked"><a href="#100">Stupid Large </a></li>
 				</ul>
 			</dd>
 			<dt><label for="diagramPositionPicker"><span>Reference diagrams on left</span> <em>&#9658;</em></label></dt>
 			<dd id="diagramPositionPicker" data-action="layout">
 				<ul class="pseudoSelect">
-					<li class="checked"><a href="#left">On left side</a></li>
+					<li class="checked"><a href="#left">On left side (floating)</a></li>
+					<li><a href="#right">On right side</a></li>
 					<li><a href="#top">At the top</a></li>
 					<li><a href="#none">Don't show</a></li>
 				</ul>
@@ -287,8 +288,8 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 <!-- SCRIPTS -->
 <script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/jquery.draggable.js"></script>
-<script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/ukeGeeks.scriptasaurus.min.js"></script>
-<script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/ugsEditorPlus.min.js"></script>
+<script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/ukeGeeks.scriptasaurus.merged.js"></script>
+<script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/ugsEditorPlus.merged.js"></script>
 <script type="text/javascript">
 var ugs_settings = <?php echo($model->EditorSettingsJson); ?>;
 if (ugs_settings && ugs_settings.invalidJson){

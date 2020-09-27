@@ -30,13 +30,21 @@ class FileWriter {
 	 */
 	private function UniqueFilename( $directory, $baseFilename, $extenstion = '.txt' ) {
 		try {
-		$filename = '';
+/*		$filename = '';
 		while ( true ) {
 			$m = microtime();
 			$filename = $baseFilename . self::ID_PREFIX . ( ( $m - floor( $m ) ) * 1000000 ) . $extenstion;
 			if ( !file_exists( $directory . $baseFilename ) ) {
 				break;
 			}
+                } */
+		$filename = $baseFilename . $extenstion;
+		while ( true ) {
+			if ( !file_exists( $directory . $baseFilename ) ) {
+				break;
+			}
+			$m = microtime();
+			$filename = $baseFilename . self::ID_PREFIX . ( ( $m - floor( $m ) ) * 1000000 ) . $extenstion;
 		}
 
 		return $filename;

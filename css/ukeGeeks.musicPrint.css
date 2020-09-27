@@ -12,4 +12,22 @@ header hgroup aside{
 	border-width:0;
 	page-break-before:always;
 }
-
+/* Chord bracket formatting
+ * ----------------------------- */
+.ugsInline code strong {
+        color:red;
+        font-weight: bold;
+}
+/* Chord formatting
+ * ----------------------------- */
+.ugsChords code em {
+	color:blue;
+        font-weight: normal;
+}
+.ugsInline code em {
+	color:red;
+        font-weight: bold;
+}
+.ugs-source-wrap h5, .ugs-source-wrap h6 {
+    line-height: 1.2;
+}

@@ -53,7 +53,7 @@ ugsEditorPlus.options = {
 	 * @type Number
 	 * @default 12
 	 */
-	fontSize: 12,
+	fontSize: 14,
 
 	/**
 	 * Reference diagram size expressed as a percentage (100% being max)
@@ -376,11 +376,11 @@ ugsEditorPlus.actions = (function() {
 		m.style.width = Math.round(prct * ukeGeeks.settings.fretBox.width) + 'px';
 		m.style.height = Math.round(prct * ukeGeeks.settings.fretBox.height) + 'px';
 
-		m = s.find('.scalablePrintArea .ugs-diagrams-wrap');
-		m.style.width = columnWidth + 'px';
-
-		m = s.find('.scalablePrintArea .ugs-source-wrap');
-		m.style.marginLeft = (25 + columnWidth) + 'px';
+//		m = s.find('.scalablePrintArea .ugs-diagrams-wrap');
+//		m.style.width = columnWidth + 'px';
+//
+//		m = s.find('.scalablePrintArea .ugs-source-wrap');
+//		m.style.marginLeft = (25 + columnWidth) + 'px';
 	};
 
 	/* ----------------------------------------------------------------------------------- *|
@@ -396,7 +396,8 @@ ugsEditorPlus.actions = (function() {
 	var doLayout = function(value) {
 		$('body')
 			.toggleClass('diagramsOnTop', value == 'top')
-			.toggleClass('diagramsOnSide', value == 'left')
+			.toggleClass('diagramsOnLeft', value == 'left')
+			.toggleClass('diagramsOnRight', value == 'right')
 			.toggleClass('ugsHideDiagrams', value == 'none');
 	};
 
@@ -811,7 +812,7 @@ ugsEditorPlus.themes = (function() {
 				dots: '#ff0000',
 				dotText: '#ffffff',
 				text: '#000000',
-				fretText: '#4a4a4a'
+				fretText: '#ff0000'
 			},
 			tabs: {
 				lines: '#999999',
