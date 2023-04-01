@@ -18,15 +18,15 @@ ukeGeeks.transpose = (function() {
 	var re = /^([A-G][#b]?)(.*)/;
 	var tones = {
 		'A' : 0,
-		'A#': 1,
 		'Bb': 1,
+		'A#': 1,
 		'B' : 2,
 		'C' : 3,
 		'C#': 4,
 		'Db': 4,
 		'D' : 5,
-		'D#': 6,
 		'Eb': 6,
+		'D#': 6,
 		'E' : 7,
 		'F' : 8,
 		'F#': 9,
