@@ -129,6 +129,9 @@ class FileWriter {
 		return $content .
 '
 TYPE_YOUR_SONG_HERE
+
+# Change Log
+# 01.01.2000 - Firstname Lastname: Added Song
 ';
 	}
 
