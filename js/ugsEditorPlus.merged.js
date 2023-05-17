@@ -1069,10 +1069,13 @@ ugsEditorPlus.optionsDlg = (function() {
 			options = ugsEditorPlus.options;
 
 		// Update Button
-		document.getElementById('updateBtn').onclick = function() {
-			triggerNotify('update', '');
-			return false;
-		};
+		ele = document.getElementById('updateBtn');
+		if (ele) {
+			ele.onclick = function() {
+				triggerNotify('update', '');
+				return false;
+			};
+		}
 
 		// show/hide square bracket (chord enclosure)
 		ele = document.getElementById('chkEnclosures');
