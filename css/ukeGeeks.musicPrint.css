@@ -31,9 +31,9 @@ header hgroup aside{
 .ugs-source-wrap h5, .ugs-source-wrap h6 {
     line-height: 1.2;
 }
-> /* TABS
->   ------------------------------ */
-> /* wkhtmltopdf on this server only seems to supprt DejaVu Sans Mono as a mono font, and needs a larger font ... */
+/* TABS
+  ------------------------------ */
+/* wkhtmltopdf on this server only seems to supprt DejaVu Sans Mono as a mono font, and needs a larger font ... */
 .ugs-song-wrap .ugsTabs {
       margin:0.6em;
       padding:0;
