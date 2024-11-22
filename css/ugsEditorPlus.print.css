@@ -30,7 +30,7 @@
         }
         .diagramsOnLeft .ugsLayoutTwoColumn .ugs-source-wrap {
             margin-left: 0;
-            margin-right: unset;
+            margin-right: 16px;
             overflow: visible;
         }
         .ugs-source-wrap {
