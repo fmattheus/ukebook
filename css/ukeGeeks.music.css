@@ -151,9 +151,11 @@
 .ugs-song-wrap .ugsTabs {
 	margin:0.6em;
 	padding:0;
-        font-family: Monaco, "Consolas", "Lucida Console", "Courier New", courier, monospace;
-        font-size: 12pt;
-        page-break-inside : avoid;
+    font-family: Monaco, "Consolas", "Lucida Console", "Courier New", courier, monospace;
+    font-size: 12pt;
+    page-break-inside : avoid;
+    /* add this so that tabs don't wrap */
+    white-space: pre;
 }
 .ugs-song-wrap .ugsTabs + .ugsPlain {
 	margin:0 0 1em;
@@ -166,7 +168,9 @@
   ------------------------------ */
 .ugs-song-wrap .ugsChords {
 	line-height:1.8;
-        white-space: pre;
+/*  Need to change this as we want Tabs NOT to wrap, but chord lines should
+ *  white-space: pre; */
+    white-space: pre-wrap;
 }
 .ugsChords code {
 	color:#efefef;
@@ -213,7 +217,8 @@
 .ugs-song-wrap.ugsInline pre /* added for Editor Plus -- required? */
 {
 	line-height:1.2;
-        white-space: pre-wrap;
+/* disable so that tabs don't wrap
+    white-space: pre-wrap;*/
 }
 .ugsInline code {
 /*	padding-left:.1em; */ /*Removed by Frank: I like the Chords to be left alligned */
