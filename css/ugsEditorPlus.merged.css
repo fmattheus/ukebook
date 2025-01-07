@@ -795,10 +795,24 @@ body {
 	-webkit-box-shadow: inset 3px 3px 5px rgba(0,0,0,0.3);
 	box-shadow: inset 3px 3px 5px rgba(0,0,0,0.3);
 }
+.editLocked {
+      background: #ff5c5c!important;
+}
 .overlay h3 {
 	background: url("../img/editor/editorSprite.png") repeat-x 0 -100px #933f17;
 	border-bottom: 1px solid #240e01;
 	border-radius: 12px 12px 0 0;
+	border-top: 1px solid #84623c;
+	color: #f4e19f;
+	font-size: 22px;
+	height: 37px;
+	line-height: 37px;
+	padding: 0 20px;
+	text-shadow: 1px 2px 0 #592108;
+}
+.overlay h4 {
+    background: #ff0000;
+    border-bottom: 1px solid #240e01;
 	border-top: 1px solid #84623c;
 	color: #f4e19f;
 	font-size: 22px;

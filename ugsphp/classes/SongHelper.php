@@ -18,6 +18,7 @@ class SongHelper {
 			 'artist' => '',
 			 'album' => '',
 			 'body' => '[D]Where, oh, where has this [A7]stupid file gone?' . "\n" . 'Oh, [G]where or where can it [D]be?',
+             'reputation' => '',
 			 'meta' => array()
 		);
 		
@@ -30,6 +31,7 @@ class SongHelper {
 		$song->subtitle = self::getSubtitle($text);
 		$song->artist = self::getArtist($text);
 		$song->album = self::getAlbum($text);
+        $song->reputation = self::getReputation($text);
 		$song->meta = self::getMeta($text);
 		$song->body = $text;
 		
@@ -75,6 +77,15 @@ class SongHelper {
 	private static function getAlbum($text) {
 		return self::_matchRegEx($text, 1, "/{album\s*:\s*(.+?)}/i");
 	}
+
+    /**
+     * parses Reputation tag: {Reputation: Great}
+     * @param string $text input string to be parses
+     * @return string 
+     */
+    private static function getReputation($text) {
+            return self::_matchRegEx($text, 1, "/{reputation\s*:\s*(.+?)}/i");
+    }
 
 	/**
 	 * parses Uke Geeks Meta tag: {ukegeeks-meta: Blah Blah}

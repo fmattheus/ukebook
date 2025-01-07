@@ -21,4 +21,5 @@ class SiteUser
 	 * @var boolean
 	 */
 	public $IsAuthenticated = false;
+    public $IsGuest = true;
 }

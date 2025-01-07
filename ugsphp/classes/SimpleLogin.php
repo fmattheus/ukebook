@@ -63,6 +63,7 @@ class SimpleLogin{
 				if ($account['isActive']) {
 					$siteUser->Username = $account['user'];
 					$siteUser->MayEdit  = $account['mayEdit'];
+                    $siteUser->IsAdmin  = $account['isAdmin'];
 					$siteUser->DisplayName = $account['name'];
 					$siteUser->IsAllowAccess = true;
 					$siteUser->IsAuthenticated = true;

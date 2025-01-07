@@ -25,12 +25,13 @@ class Song_Vmb extends _base_Vmb {
 		$viewModel->Artist = $song->artist;
 		$viewModel->Album = $song->album; // htmlspecialchars();
 		$viewModel->Body = $song->body;
+        $viewModel->Reputation = $song->reputation;
 		$viewModel->UgsMeta = $song->meta;
 		$viewModel->SourceUri = Ugs::MakeUri(Actions::Source, $filename);
 		$viewModel->EditUri = Ugs::MakeUri(Actions::Edit, $filename);
 
 		$viewModel->Id = $filename;
-		$viewModel->IsUpdateAllowed = $this->SiteUser->MayEdit && $this->SiteUser->IsAuthenticated;
+        $viewModel->IsUpdateAllowed = $this->SiteUser->MayEdit && $this->SiteUser->IsAuthenticated && !(!$this->SiteUser->IsAdmin && $song->reputation);
 
 		$viewModel->EditorSettingsJson = $this->getSettings();
 		return $viewModel;

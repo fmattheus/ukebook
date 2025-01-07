@@ -19,6 +19,10 @@ function MakeRowHtml($song){
 		$html .= ' <em class="songIncomplete">(incomplete)</em>';
 	}
 
+    if ($song->Reputation){
+        $html .= ' <em class="reputation">&#127942;</em>';
+    }
+
 	if (strlen($song->Subtitle) > 0){
 		$html .= '<p><em class="songSubtitle">' . $song->Subtitle . '</em></p>';
 	}

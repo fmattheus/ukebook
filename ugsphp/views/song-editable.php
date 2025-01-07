@@ -52,6 +52,9 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 <section id="songSourceDlg" class="overlay <?php echo($editDlgCssClassName); ?>">
 	<hgroup>
 		<h3>Edit Song</h3>
+        <?php if (!$model->IsUpdateAllowed) { ?>
+            <h4>WARNING: This song is protected!</h4>
+        <?php } ?>
 	</hgroup>
 	<div>
 		<a title="close this" href="#close" class="closeBtn">Close</a>
@@ -69,7 +72,8 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 			<?php } ?>
 			<a href="#chordBuilder" id="cdBldOpenBtn" data-dialog="cdBldDlg" class="alternateBtn" title="Add custom &amp; alternate chord diagrams">Chord Builder</a>
 		</p>
-		<textarea id="chordProSource" wrap="off"><?php echo($model->Body); ?></textarea>
+        <textarea id="chordProSource" wrap="off"<?php if (!$model->IsUpdateAllowed) { ?> class="editLocked"<?php } ?>><?php echo($model->Body); ?></textarea>
+
 	</div>
 </section>
 <!-- APP TOOLBAR -->

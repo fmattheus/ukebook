@@ -69,6 +69,7 @@ class SongListCacheManager {
 			$song->Subtitle = $parsed->subtitle;
 			$song->Album = $parsed->album;
 			$song->Artist = $parsed->artist;
+            $song->Reputation = $parsed->reputation;
 
 			$list->SongList[] = $song;
 		}
