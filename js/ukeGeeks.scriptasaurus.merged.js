@@ -1421,7 +1421,7 @@ ukeGeeks.definitions.sopranoUkuleleGcea = [
 	'{define: Cdim frets 2 3 2 3}',
 	'{define: Cmaj7 frets 0 0 0 2}',
 	'{define: C6 frets 0 0 0 0}',
-	'{define: Cm6 frets 0 3 5 5}',
+	'{define: Cm6 frets 0 3 3 0}',
 	'{define: Csus2 frets 0 2 3 3}',
 	'{define: Csus4 frets 0 0 1 3}',
 	'{define: Caug frets 1 0 0 3}',
