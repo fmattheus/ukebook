@@ -11,7 +11,7 @@ class SongListCacheManager {
 	// -----------------------------------------
 	// PUBLIC METHODS
 	// -----------------------------------------
-	function SongListCacheManager(){
+	function __construct(){
 		$this->cache = new SimpleCache();
 		$this->cache->setCacheDir(Config::$AppDirectory . 'cache/');
 	}
@@ -43,6 +43,13 @@ class SongListCacheManager {
 		return unserialize($cachedSongList);
 	}
 
+	/**
+	 * Deletes cache file
+	 */
+	public function Delete() {
+		$this->cache->delete(Config::SongCacheKey_FileName);
+	}
+
 	// -----------------------------------------
 	// PRIVATE METHODS
 	// -----------------------------------------
@@ -69,7 +76,7 @@ class SongListCacheManager {
 			$song->Subtitle = $parsed->subtitle;
 			$song->Album = $parsed->album;
 			$song->Artist = $parsed->artist;
-            $song->Reputation = $parsed->reputation;
+			$song->Reputation = $parsed->reputation;
 
 			$list->SongList[] = $song;
 		}

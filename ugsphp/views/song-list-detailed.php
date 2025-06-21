@@ -62,19 +62,30 @@ function MakeRowHtml($song){
 					<?php
 				}
 				?>
+				<?php if ($model->SiteUser->IsAdmin) { ?>
+					<input type="button" onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::ListSetlists); ?>'" class="baseBtn blueBtn" value="Setlists" title="View saved setlists" style="margin-left: 10px;" />
+				<?php } ?>
 			</aside>
 		<?php } ?>
-	<h2><?php echo($model->SubHeadline); ?></h2>
-	<h1><?php echo($model->Headline); ?></h1>
-	<p><?php echo(count($model->SongList)); ?> Songs.
-		<label for="quickSearch">Quick search:</label> <input class="quickSearch" id="quickSearch" autocomplete="off" type="text" /></p>
-	<ol class="songList">
-		<?php
-		foreach($model->SongList as $song){
-			echo('<li>' . MakeRowHtml($song) . '</li>');
-		}
-		?>
-	</ol>
+		
+		<h2><?php echo($model->SubHeadline); ?></h2>
+		<h1><?php echo($model->Headline); ?></h1>
+		
+		<?php if (isset($_GET['error']) && $_GET['error'] === 'admin_required'): ?>
+			<div style="background: #f8d7da; color: #721c24; padding: 10px; margin: 10px 0; border: 1px solid #f5c6cb; border-radius: 4px;">
+				<strong>Access Denied:</strong> Setlist management is restricted to administrators only.
+			</div>
+		<?php endif; ?>
+		
+		<p><?php echo(count($model->SongList->SongList)); ?> Songs.
+			<label for="quickSearch">Quick search:</label> <input class="quickSearch" id="quickSearch" autocomplete="off" type="text" /></p>
+		<ol class="songList">
+			<?php
+			foreach($model->SongList->SongList as $song){
+				echo('<li>' . MakeRowHtml($song) . '</li>');
+			}
+			?>
+		</ol>
 	</section>
 	<script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/ugsEditorPlus.merged.js"></script>

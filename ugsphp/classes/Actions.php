@@ -15,6 +15,14 @@ final class Actions {
 	// AJAX Actions
 	const AjaxNewSong = 7;
 	const AjaxUpdateSong = 8;
+	// Setlist Actions
+	const Setlist = 9;
+	const SaveSetlist = 10;
+	const ListSetlists = 11;
+	const DeleteSetlist = 12;
+	const CreatePDF = 13;
+	const ListPDFs = 14;
+	const DownloadPDF = 15;
 
 	/**
 	 * convert passed in string value to corresponding Actions enum
@@ -31,6 +39,13 @@ final class Actions {
 		 	case 'logout': return self::Logout;
 		 	case 'ajaxnewsong': return self::AjaxNewSong;
 		 	case 'ajaxupdatesong': return self::AjaxUpdateSong;
+		 	case 'setlist': return self::Setlist;
+		 	case 'savesetlist': return self::SaveSetlist;
+		 	case 'listsetlists': return self::ListSetlists;
+		 	case 'deletesetlist': return self::DeleteSetlist;
+		 	case 'createpdf': return self::CreatePDF;
+		 	case 'listpdfs': return self::ListPDFs;
+		 	case 'downloadpdf': return self::DownloadPDF;
 		 }
 		 return self::Songbook;
 	}
@@ -50,6 +65,13 @@ final class Actions {
 			case self::Logout: return 'Logout';
 			case self::AjaxNewSong: return 'AjaxNewSong';
 			case self::AjaxUpdateSong: return 'AjaxUpdateSong';
+			case self::Setlist: return 'Setlist';
+			case self::SaveSetlist: return 'SaveSetlist';
+			case self::ListSetlists: return 'ListSetlists';
+			case self::DeleteSetlist: return 'DeleteSetlist';
+			case self::CreatePDF: return 'CreatePDF';
+			case self::ListPDFs: return 'ListPDFs';
+			case self::DownloadPDF: return 'DownloadPDF';
 		}
 		return 'Songbook';
 	}

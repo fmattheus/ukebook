@@ -7,6 +7,7 @@ class SongLinkPlus_Pvm {
 	public $Album = '';
 	public $Artist = '';
 	public $HasInfo = false;
+	public $Reputation = false;
 }
 
 /**

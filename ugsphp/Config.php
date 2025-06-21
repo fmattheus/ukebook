@@ -12,6 +12,7 @@ class Config {
 
 	const MaxFileSize = 100000;
 	const NotFound_404File = 'error.txt';
+	const FileCharset = 'UTF-8';
 
 	// --------------------------------------
 	// file paths/directories (DO NOT DIRECTLY EDIT THESE... see Init method below)
@@ -116,6 +117,11 @@ class Config {
 			'mayEdit' => true
 		)
 	);
+
+	// --------------------------------------
+	// PDF Generation Script Path
+	// --------------------------------------
+	const createPDFscriptPath = '/path/to/createPDF';
 
 	/**
 	 * any dynamic setup happens here

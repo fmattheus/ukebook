@@ -107,6 +107,23 @@ class Ugs{
 			return $user;
 		}
 
+		// Check if action requires admin access
+		$adminActions = array(
+			Actions::Setlist,
+			Actions::SaveSetlist,
+			Actions::ListSetlists,
+			Actions::DeleteSetlist,
+			Actions::CreatePDF,
+			Actions::ListPDFs,
+			Actions::DownloadPDF
+		);
+		
+		if (in_array($action, $adminActions) && !$user->IsAdmin) {
+			// Redirect non-admin users to songbook with error message
+			header('Location: ' . self::MakeUri(Actions::Songbook) . '&error=admin_required');
+			return $user;
+		}
+
 		// $user->IsAllowAccess = true;
 		return $user;
 	}
@@ -142,6 +159,27 @@ class Ugs{
         		case Actions::AjaxUpdateSong:
 	        		$builder = new Ajax_UpdateSong_Vmb();
 		        	break;
+			case Actions::Setlist:
+				$builder = new Setlist_Vmb();
+				break;
+			case Actions::SaveSetlist:
+				$builder = new SaveSetlist_Vmb();
+				break;
+			case Actions::ListSetlists:
+				$builder = new SetlistList_Vmb();
+				break;
+			case Actions::DeleteSetlist:
+				$builder = new DeleteSetlist_Vmb();
+				break;
+			case Actions::CreatePDF:
+				$builder = new CreatePDF_Vmb();
+				break;
+			case Actions::ListPDFs:
+				$builder = new ListPDFs_Vmb();
+				break;
+			case Actions::DownloadPDF:
+				$builder = new DownloadPDF_Vmb();
+				break;
 		        default:
         			$builder = Config::UseDetailedLists
 					? new SongListDetailed_Vmb()
@@ -217,20 +255,39 @@ class Ugs{
 	}
 
 	/**
-	 * Gets the PHP filename (aka "View") to be rendered
+	 * Returns the name of the view file to include
 	 *
-	 * @param Actions(int-enum) $action
-	 * @return  string
+	 * @param Actions(enum) $action
+	 * @return string
 	 */
 	private function GetViewName( $action ) {
 		switch($action){
-			case Actions::Song: return Config::UseEditableSong ? 'song-editable.php' : 'song.php';
-			case Actions::Edit: return 'song-editable.php';
-			case Actions::Source: return 'song-source.php';
-			case Actions::Reindex: return 'songs-rebuild-cache.php';
-			case Actions::Logout:
+			case Actions::Song:
+				return Config::UseEditableSong ? 'song-editable.php' : 'song.php';
+			case Actions::Edit:
+				return 'song-editable.php';
+			case Actions::Source:
+				return 'song-source.php';
+			case Actions::Reindex:
+				return 'songs-rebuild-cache.php';
 			case Actions::Login:
 				return 'login.php';
+			case Actions::Setlist:
+				return 'setlist.php';
+			case Actions::SaveSetlist:
+				return 'save-setlist.php';
+			case Actions::ListSetlists:
+				return 'setlist-list.php';
+			case Actions::DeleteSetlist:
+				return 'delete-setlist.php';
+			case Actions::CreatePDF:
+				return 'create-pdf.php';
+			case Actions::ListPDFs:
+				return 'pdf-list.php';
+			case Actions::DownloadPDF:
+				return 'download-pdf.php';
+			default:
+				return Config::UseDetailedLists ? 'song-list-detailed.php' : 'song-list.php';
 		}
 		return Config::UseDetailedLists ? 'song-list-detailed.php' : 'song-list.php';
 	}

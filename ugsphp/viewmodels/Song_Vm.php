@@ -10,6 +10,7 @@ class Song_Vm extends _base_Vm {
 	public $SourceUri = '';
 	public $EditUri = '';
 	public $EditorSettingsJson = '';
+	public $Reputation = false;
 
 	public $Id = '';
 
