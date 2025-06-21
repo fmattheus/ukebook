@@ -26,6 +26,12 @@ class SaveSetlist_Vmb extends _base_Vmb {
 					return $viewModel;
 				}
 				
+				if (strpos($setlistName, '_') !== false) {
+					$viewModel->Success = false;
+					$viewModel->ErrorMessage = 'Setlist name cannot contain underscores (_). Please use another character like a dash (-).';
+					return $viewModel;
+				}
+				
 				if (empty($songs) || !is_array($songs)) {
 					$viewModel->Success = false;
 					$viewModel->ErrorMessage = 'Setlist must contain at least one song';

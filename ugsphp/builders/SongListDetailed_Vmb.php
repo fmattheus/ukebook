@@ -12,7 +12,9 @@ class SongListDetailed_Vmb extends _base_Vmb {
 		$viewModel = new SongList_Vm();
 		$viewModel->IsNewAllowed = $this->SiteUser->MayEdit && $this->SiteUser->IsAuthenticated;
 		$cache = new SongListCacheManager();
-		$viewModel->SongList = $cache->Get();
+		$list = new SongListPlus_Pvm();
+		$list->SongList = $cache->Get();
+		$viewModel->SongList = $list;
 		return $viewModel;
 	}
 
