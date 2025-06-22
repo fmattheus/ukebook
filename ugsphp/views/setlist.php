@@ -239,7 +239,11 @@
 								<div class="song-artist"><?php echo htmlspecialchars($song->Artist); ?></div>
 							<?php endif; ?>
 						</div>
-						<button class="add-btn" onclick="addToSetlist('<?php echo htmlspecialchars($song->Title); ?>', '<?php echo($song->Uri); ?>', '<?php echo htmlspecialchars($song->Artist); ?>')">Add</button>
+						<button class="add-btn" 
+							data-title="<?php echo htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'); ?>" 
+							data-uri="<?php echo htmlspecialchars($song->Uri, ENT_QUOTES, 'UTF-8'); ?>" 
+							data-artist="<?php echo htmlspecialchars($song->Artist, ENT_QUOTES, 'UTF-8'); ?>" 
+							onclick="addToSetlist(this)">Add</button>
 					</div>
 				<?php endforeach; ?>
 			</div>
@@ -268,6 +272,7 @@
 		let allSongs = <?php echo json_encode($model->SongList); ?>;
 		let setlistSongs = [];
 		let draggedElement = null;
+		let dragSrcEl = null;
 		
 		// Search functionality
 		document.getElementById('searchBox').addEventListener('input', function() {
@@ -290,9 +295,12 @@
 		});
 		
 		// Add song to setlist
-		function addToSetlist(title, uri, artist) {
-			// Check if already in setlist
-			if (setlistSongs.some(song => song.Title === title)) {
+		function addToSetlist(button) {
+			const title = button.getAttribute('data-title');
+			const uri = button.getAttribute('data-uri');
+			const artist = button.getAttribute('data-artist');
+
+			if (setlistSongs.some(song => song.Uri === uri)) {
 				alert('Song is already in the setlist!');
 				return;
 			}
@@ -302,8 +310,8 @@
 		}
 		
 		// Remove song from setlist
-		function removeFromSetlist(title) {
-			setlistSongs = setlistSongs.filter(song => song.Title !== title);
+		function removeFromSetlist(uri) {
+			setlistSongs = setlistSongs.filter(song => song.Uri !== uri);
 			updateSetlistDisplay();
 		}
 		
@@ -415,7 +423,7 @@
 							<a href="${song.Uri}" class="song-title" target="_blank">${song.Title}</a>
 							${song.Artist ? `<div class="song-artist">${song.Artist}</div>` : ''}
 						</div>
-						<button class="remove-btn" onclick="removeFromSetlist('${song.Title}')">Remove</button>
+						<button class="remove-btn" onclick="removeFromSetlist('${song.Uri}')">Remove</button>
 					</div>
 				`;
 			});
