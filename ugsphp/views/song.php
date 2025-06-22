@@ -22,6 +22,53 @@ header aside a{
 	padding-left: 1em;
 }
 </style>
+<style>
+/* Inline metronome styles for mobile browser compatibility */
+.bpm-metronome {
+	position: fixed !important;
+	top: 80px !important;
+	right: 20px !important;
+	width: 50px !important;
+	height: 50px !important;
+	border-radius: 50% !important;
+	background: radial-gradient(circle at 30% 30%, #ff6b6b, #ff0000) !important;
+	box-shadow: 0 4px 12px rgba(255,0,0,0.4) !important;
+	z-index: 1000 !important;
+	border: 2px solid #ffffff !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	color: white !important;
+	font-weight: bold !important;
+	font-size: 16px !important;
+	font-family: Arial, sans-serif !important;
+	animation: bounce 1s cubic-bezier(0.15, 0.15, 0.25, 1) infinite !important;
+	animation-play-state: paused !important;
+}
+
+.bpm-metronome.bouncing {
+	animation-play-state: running !important;
+}
+
+.bpm-metronome.hidden {
+	display: none !important;
+}
+
+@keyframes bounce {
+	0% {
+		transform: translateY(-20px) scale(1.1);
+		box-shadow: 0 8px 20px rgba(255,0,0,0.6);
+	}
+	50% {
+		transform: translateY(0) scale(1);
+		box-shadow: 0 4px 12px rgba(255,0,0,0.4);
+	}
+	100% {
+		transform: translateY(-20px) scale(1.1);
+		box-shadow: 0 8px 20px rgba(255,0,0,0.6);
+	}
+}
+</style>
 </head>
 <body>
 <section>

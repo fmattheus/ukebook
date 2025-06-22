@@ -38,15 +38,15 @@ function initMetronome() {
 		if (isRunning) return;
 		isRunning = true;
 		
-		// Remove hidden class to show the metronome
-		metronome.classList.remove('hidden');
-		
 		// Calculate animation duration based on BPM
 		var beatInterval = 60000 / bpm; // milliseconds per beat
 		var animationDuration = beatInterval / 1000; // convert to seconds
 		
-		// Set the animation duration dynamically
-		metronome.style.animationDuration = animationDuration + 's';
+		// Set the animation duration dynamically with !important
+		metronome.style.setProperty('animation-duration', animationDuration + 's', 'important');
+		
+		// Remove hidden class to show the metronome
+		metronome.classList.remove('hidden');
 		
 		// Start the bouncing animation
 		metronome.classList.add('bouncing');
