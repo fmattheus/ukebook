@@ -14,6 +14,12 @@ class Login_Vmb extends _base_Vmb {
 		$viewModel = new Login_Vm();
 		$viewModel->PageTitle = 'Login Required';
 
+		if (isset($_POST['redirect'])) {
+			$viewModel->RedirectUrl = $_POST['redirect'];
+		} elseif (isset($_GET['redirect'])) {
+			$viewModel->RedirectUrl = $_GET['redirect'];
+		}
+
 		if (isset($_REQUEST['username'])){
 			$login = $login == null ? new SimpleLogin : $login;
 			$viewModel->Username = $_REQUEST['username'];

@@ -22,6 +22,7 @@ $errCssstyle = (strlen($model->ErrorMessage) > 0) ? 'block' : 'none';
 	</hgroup>
 	<div>
 	<form method="post" action="<?php echo($model->FormPostUri); ?>" id="loginForm">
+		<input type="hidden" name="redirect" value="<?php echo htmlspecialchars($model->RedirectUrl); ?>" />
 		<p class="errorMessage" id="loginErrorMessage" style="display: <?php echo($errCssstyle); ?>"><?php echo($model->ErrorMessage); ?></p>
 		<ul>
 			<li>

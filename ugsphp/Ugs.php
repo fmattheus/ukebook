@@ -87,6 +87,17 @@ class Ugs{
 
 		$user = $login->GetUser();
 		if ( !$user->IsAllowAccess ) {
+			// User is not logged in.
+			// If this is not a login attempt, redirect to the login page.
+			$isLoginAttempt = ($action == Actions::Login);
+			if (!$isLoginAttempt) {
+				$redirectUrl = $_SERVER['REQUEST_URI'];
+				$loginUrl = self::MakeUri(Actions::Login);
+				$separator = (strpos($loginUrl, '?') === false) ? '?' : '&';
+				header('Location: ' . $loginUrl . $separator . 'redirect=' . urlencode($redirectUrl));
+				return $user;
+			}
+
 			$builder = $this->GetBuilder( Actions::Login, $user );
 			$model = $builder->Build($login);
 			$user = $login->GetUser();
@@ -98,7 +109,8 @@ class Ugs{
 			}
 
 			// successful login we redirect:
-			header( 'Location: ' . self::MakeUri( Actions::Songbook ) );
+			$redirectUrl = isset($_POST['redirect']) && !empty($_POST['redirect']) ? $_POST['redirect'] : self::MakeUri(Actions::Songbook);
+			header('Location: ' . $redirectUrl);
 			return  $user;
 		}
 		elseif ($action == Actions::Login){
