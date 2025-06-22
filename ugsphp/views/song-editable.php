@@ -72,6 +72,14 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 		box-shadow: 0 8px 20px rgba(255,0,0,0.6);
 	}
 }
+
+.bpm-display {
+	font-size: 0.9em;
+	color: #888;
+	margin-top: 0.2em;
+	margin-bottom: 0.5em;
+	font-family: Arial, sans-serif;
+}
 </style>
 </head>
 <body class="editableSongPage pageWidth_screen">
@@ -84,9 +92,18 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 	<header>
 		<hgroup class="ugs-songInfo">
 			<h1 id="songTitle" class="ugs-songTitle"><?php echo($model->SongTitle); ?></h1>
-			<h2 id="songSubtitle" class="ugs-songSubtitle" style="display:<?php echo(GetDisplayStyle($model->Subtitle)); ?>;"><?php echo($model->Subtitle); ?></h2>
-			<h2 id="songArtist" class="ugs-songArtist" style="display:<?php echo(GetDisplayStyle($model->Artist)); ?>;"><?php echo($model->Artist); ?></h2>
-			<h2 id="songAlbum" class="ugs-songAlbum" style="display:<?php echo(GetDisplayStyle($model->Album)); ?>;"><?php echo($model->Album); ?></h2>
+			<h2 id="songSubtitle" class="ugs-songSubtitle" style="display:<?php echo(GetDisplayStyle($model->Subtitle)); ?>;">
+				<?php echo($model->Subtitle); ?>
+			</h2>
+			<h2 id="songArtist" class="ugs-songArtist" style="display:<?php echo(GetDisplayStyle($model->Artist)); ?>;">
+				<?php echo($model->Artist); ?>
+			</h2>
+			<h2 id="songAlbum" class="ugs-songAlbum" style="display:<?php echo(GetDisplayStyle($model->Album)); ?>;">
+				<?php echo($model->Album); ?>
+			</h2>
+			<?php if ($model->Bpm > 0): ?>
+				<div class="bpm-display" id="bpmDisplay">BPM: <?php echo($model->Bpm); ?></div>
+			<?php endif; ?>
 		</hgroup>
 	</header>
 	<div class="metaInfo" id="songMeta"> </div>
@@ -374,6 +391,20 @@ $(function() {
 	<?php
 	}
 ?>
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var bpmDisplay = document.getElementById('bpmDisplay');
+  if (bpmDisplay) {
+    bpmDisplay.style.cursor = 'pointer';
+    bpmDisplay.title = 'Click to restart metronome';
+    bpmDisplay.onclick = function() {
+      if (typeof restartMetronome === 'function') {
+        restartMetronome();
+      }
+    };
+  }
 });
 </script>
 </body>

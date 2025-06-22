@@ -69,6 +69,15 @@ header aside a{
 	}
 }
 </style>
+<style>
+.bpm-display {
+  font-size: 0.9em;
+  color: #888;
+  margin-top: 0.2em;
+  margin-bottom: 0.5em;
+  font-family: Arial, sans-serif;
+}
+</style>
 </head>
 <body>
 <section>
@@ -85,6 +94,9 @@ header aside a{
 			<h2 class="ugsSubtitle"><?php echo($model->Subtitle); ?></h2>
 			<?php if (strlen($model->Album) > 0): ?>
 				<h3 class="ugsAlbum"><?php echo($model->Album); ?></h3>
+			<?php endif; ?>
+			<?php if ($model->Bpm > 0): ?>
+				<div class="bpm-display" id="bpmDisplay">BPM: <?php echo($model->Bpm); ?></div>
 			<?php endif; ?>
 		</hgroup>
 	</header>
@@ -110,5 +122,19 @@ header aside a{
 </footer>
 <script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>/js/ukeGeeks.scriptasaurus.min.js"></script>
 <script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>/js/startup.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var bpmDisplay = document.getElementById('bpmDisplay');
+  if (bpmDisplay) {
+    bpmDisplay.style.cursor = 'pointer';
+    bpmDisplay.title = 'Click to restart metronome';
+    bpmDisplay.onclick = function() {
+      if (typeof restartMetronome === 'function') {
+        restartMetronome();
+      }
+    };
+  }
+});
+</script>
 </body>
 </html>

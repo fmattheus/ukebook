@@ -34,6 +34,17 @@ function initMetronome() {
 	var intervalId = null;
 	var timeoutId = null;
 	
+	// Make restartMetronome globally accessible
+	window.restartMetronome = function() {
+		stopMetronome();
+		startMetronome();
+		
+		// Stop metronome after configured timeout
+		timeoutId = setTimeout(function() {
+			stopMetronome();
+		}, metronomeTimeout * 1000);
+	};
+	
 	function startMetronome() {
 		if (isRunning) return;
 		isRunning = true;
@@ -69,16 +80,6 @@ function initMetronome() {
 			clearTimeout(timeoutId);
 			timeoutId = null;
 		}
-	}
-	
-	function restartMetronome() {
-		stopMetronome();
-		startMetronome();
-		
-		// Stop metronome after configured timeout
-		timeoutId = setTimeout(function() {
-			stopMetronome();
-		}, metronomeTimeout * 1000);
 	}
 	
 	// Start metronome when page loads
