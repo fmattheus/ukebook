@@ -50,17 +50,6 @@
 .ugs-grouped {
 	display: inline-block;
 }
-.ugs-grouped {
-.display: inline-block;
-}
-.ie8 .ugs-grouped {
-	display: block;
-}
-* html .ugs-grouped {
-	height: 1%;
-}
-/* LAYOUT (2-COLUMNS)
-  ------------------------------ */
 .ugsLayoutTwoColumn .ugs-diagrams-wrap {
 	float:left;
 	width:210px;
@@ -324,5 +313,72 @@
 	border-top:solid 1px #f2f2f2;
 	margin: 0;
 	page-break-before:always;
+}
+
+/* BPM Metronome Ball
+  ------------------------------ */
+.bpm-metronome {
+	position: fixed;
+	top: 80px;
+	right: 20px;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background: radial-gradient(circle at 30% 30%, #ff6b6b, #ff0000);
+	box-shadow: 0 4px 12px rgba(255,0,0,0.4);
+	z-index: 1000;
+	border: 2px solid #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+	font-family: Arial, sans-serif;
+	animation: bounce 1s cubic-bezier(0.15, 0.15, 0.25, 1) infinite;
+	animation-play-state: paused;
+}
+
+.bpm-metronome::before {
+	content: '';
+	position: absolute;
+	top: 8px;
+	left: 12px;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: radial-gradient(circle, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+	pointer-events: none;
+}
+
+.bpm-metronome.bouncing {
+	animation-play-state: running;
+}
+
+.bpm-metronome.hidden {
+	display: none;
+}
+
+@keyframes bounce {
+	0% {
+		transform: translateY(0) scale(1);
+		box-shadow: 0 4px 12px rgba(255,0,0,0.4);
+	}
+	10% {
+		transform: translateY(-15px) scale(1.05);
+		box-shadow: 0 6px 16px rgba(255,0,0,0.5);
+	}
+	50% {
+		transform: translateY(-20px) scale(1.1);
+		box-shadow: 0 8px 20px rgba(255,0,0,0.6);
+	}
+	90% {
+		transform: translateY(-5px) scale(1.02);
+		box-shadow: 0 5px 14px rgba(255,0,0,0.45);
+	}
+	100% {
+		transform: translateY(0) scale(1);
+		box-shadow: 0 4px 12px rgba(255,0,0,0.4);
+	}
 }
 

@@ -27,6 +27,7 @@ class Song_Vmb extends _base_Vmb {
 		$viewModel->Body = $song->body;
         $viewModel->Reputation = $song->reputation;
 		$viewModel->UgsMeta = $song->meta;
+		$viewModel->Bpm = $song->bpm;
 		$viewModel->SourceUri = Ugs::MakeUri(Actions::Source, $filename);
 		$viewModel->EditUri = Ugs::MakeUri(Actions::Edit, $filename);
 

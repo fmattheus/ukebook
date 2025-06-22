@@ -28,6 +28,11 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 <link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/ugsEditorPlus.print.css" media="print" />
 </head>
 <body class="editableSongPage pageWidth_screen">
+<div id="bpmMetronomeContainer">
+<?php if ($model->Bpm > 0): ?>
+<div id="bpmMetronome" class="bpm-metronome" data-bpm="<?php echo($model->Bpm); ?>"><?php echo($model->Bpm); ?></div>
+<?php endif; ?>
+</div>
 <section id="scalablePrintArea" class="scalablePrintArea">
 	<header>
 		<hgroup class="ugs-songInfo">
@@ -140,6 +145,12 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 			<dt><label for="colorPicker"><span>Normal colors (white paper) </span><em>&#9658;</em></label></dt>
 			<dd id="colorPicker" data-action="colors">
 				<ul class="pseudoSelect"></ul>
+			</dd>
+			<dt><label for="metronomePicker"><span>Metronome</span> <em>&#9658;</em></label></dt>
+			<dd id="metronomePicker" data-action="metronome">
+				<ul class="pseudoSelect">
+					<li><a href="#start">Start Metronome</a></li>
+				</ul>
 			</dd>
 		</dl>
 	</fieldset>
@@ -296,6 +307,7 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 <script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/jquery.draggable.js"></script>
 <script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/ukeGeeks.scriptasaurus.merged.js"></script>
 <script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/ugsEditorPlus.merged.js"></script>
+<script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>js/startup.js"></script>
 <script type="text/javascript">
 var ugs_settings = <?php echo($model->EditorSettingsJson); ?>;
 if (ugs_settings && ugs_settings.invalidJson){

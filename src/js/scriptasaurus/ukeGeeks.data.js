@@ -87,6 +87,12 @@ ukeGeeks.data = (function() {
 		 */
 		this.key = '';
 		/**
+		 * Song's BPM (beats per minute)
+		 * @property bpm
+		 * @type int
+		 */
+		this.bpm = 0;
+		/**
 		 * 
 		 * @property body
 	   * @type string

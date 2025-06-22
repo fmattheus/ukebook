@@ -50,6 +50,9 @@ header aside a{
 			echo('</div><!-- /.metaInfo -->');
 		}
 		?>
+	<?php if ($model->Bpm > 0): ?>
+	<div id="bpmMetronome" class="bpm-metronome" data-bpm="<?php echo($model->Bpm); ?>"><?php echo($model->Bpm); ?></div>
+	<?php endif; ?>
 	<div id="ukeSongContainer" class="ugsLayoutTwoColumn ugs-song-wrap">
 		<aside id="ukeChordsCanvas" class="ugs-diagrams-wrap ugs-grouped"></aside>
 		<article id="ukeSongText" class="ugs-source-wrap"><pre><?php echo($model->Body); ?></pre></article>

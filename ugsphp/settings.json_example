@@ -60,5 +60,10 @@
 	/* Array of chords to be ignored when drawing reference diagrams (if "ignoreCommonChords" is enabled)
 	 * Allowed values (string or array of strings): as an  array of strings: ["A", "G"] or comma delimited list: "A, G"
 	 */
-	// "commonChords": ["A", "B", "C", "D", "E", "F", "G", "Am"]
+	// "commonChords": ["A", "B", "C", "D", "E", "F", "G", "Am"],
+
+	/* Metronome timeout in seconds (how long the metronome runs before automatically stopping)
+	 * Allowed values (integer): any positive number
+	 */
+	// "metronomeTimeout": 15
 }
