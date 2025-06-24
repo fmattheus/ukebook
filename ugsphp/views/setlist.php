@@ -78,6 +78,7 @@
 			border: 1px solid #ddd;
 			cursor: grab;
 			transition: all 0.2s ease;
+			position: relative;
 		}
 		
 		.setlist-song-item:hover {
@@ -100,6 +101,12 @@
 			margin-top: 8px;
 		}
 		
+		.setlist-song-item.selected {
+			background-color: #e3f2fd !important;
+			border-color: #2196f3 !important;
+			box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+		}
+		
 		.drag-handle {
 			cursor: grab;
 			padding: 4px 8px;
@@ -107,10 +114,102 @@
 			color: #666;
 			font-size: 14px;
 			user-select: none;
+			background: #f8f9fa;
+			border-radius: 3px;
+			border: 1px solid #dee2e6;
+		}
+		
+		.drag-handle:hover {
+			background: #e9ecef;
+			color: #495057;
 		}
 		
 		.drag-handle:active {
 			cursor: grabbing;
+		}
+		
+		.song-position {
+			font-size: 12px;
+			color: #666;
+			margin-right: 8px;
+			min-width: 20px;
+			text-align: center;
+			font-weight: bold;
+		}
+		
+		.edit-indicator {
+			display: none;
+			color: #007cba;
+			font-size: 12px;
+			margin-right: 8px;
+			cursor: pointer;
+		}
+		
+		.setlist-song-item:hover .edit-indicator {
+			display: inline;
+		}
+		
+		.setlist-container.edit-mode .edit-indicator {
+			display: inline;
+		}
+		
+		.move-controls {
+			display: none; /* Hidden by default */
+			align-items: center;
+			gap: 4px;
+			margin-right: 8px;
+		}
+		
+		.move-btn {
+			padding: 2px 6px;
+			border: 1px solid #ccc;
+			background: #f8f9fa;
+			color: #666;
+			cursor: pointer;
+			border-radius: 3px;
+			font-size: 10px;
+			line-height: 1;
+		}
+		
+		.move-btn:hover {
+			background: #e9ecef;
+			color: #495057;
+		}
+		
+		.move-btn:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+		
+		.move-to-position {
+			display: none; /* Hidden by default */
+			align-items: center;
+			gap: 4px;
+			margin-right: 8px;
+		}
+		
+		.move-to-input {
+			width: 50px;
+			padding: 2px 4px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			font-size: 12px;
+			text-align: center;
+		}
+		
+		.move-to-btn {
+			padding: 2px 6px;
+			border: 1px solid #007cba;
+			background: #007cba;
+			color: white;
+			cursor: pointer;
+			border-radius: 3px;
+			font-size: 10px;
+			line-height: 1;
+		}
+		
+		.move-to-btn:hover {
+			background: #005a87;
 		}
 		
 		.song-title {
@@ -221,6 +320,24 @@
 			margin-bottom: 10px;
 			font-style: italic;
 		}
+		
+		.keyboard-shortcuts {
+			font-size: 11px;
+			color: #888;
+			margin-top: 5px;
+			font-style: italic;
+		}
+		
+		/* Show controls when song item is hovered or has show-controls class */
+		.setlist-song-item:hover .move-to-position,
+		.setlist-song-item.show-controls .move-to-position {
+			display: flex;
+		}
+		
+		/* Show controls when in edit mode */
+		.setlist-container.edit-mode .move-to-position {
+			display: flex;
+		}
 	</style>
 </head>
 <body>
@@ -260,7 +377,17 @@
 				</div>
 			</div>
 			<div class="song-count" id="setlistCount">0 songs in setlist</div>
-			<div class="drag-instructions" id="dragInstructions" style="display: none;">💡 Drag songs to reorder your setlist</div>
+			<div class="drag-instructions" id="dragInstructions" style="display: none;">
+				💡 Drag songs to reorder • Hover over songs to see move controls
+				<div class="keyboard-shortcuts">Keyboard: ↑/↓ arrows to move selected song, Enter to move to typed position</div>
+			</div>
+			
+			<div id="quickJump" style="display: none; margin-bottom: 10px;">
+				<label for="jumpToPosition">Quick jump to position:</label>
+				<input type="number" id="jumpToPosition" min="1" style="width: 60px; margin: 0 5px; padding: 2px 4px;" 
+					onkeypress="if(event.key === 'Enter') jumpToPosition(this.value)">
+				<button onclick="jumpToPosition(document.getElementById('jumpToPosition').value)" style="padding: 2px 8px; margin-left: 5px;">Go</button>
+			</div>
 			
 			<div id="setlistSongs">
 				<div class="no-songs">No songs in setlist yet. Use the search to find songs and add them!</div>
@@ -273,6 +400,7 @@
 		let setlistSongs = [];
 		let draggedElement = null;
 		let dragSrcEl = null;
+		let selectedSongIndex = -1; // For keyboard navigation
 		
 		// Search functionality
 		document.getElementById('searchBox').addEventListener('input', function() {
@@ -311,6 +439,39 @@
 			updateSetlistDisplay();
 		}
 		
+		// Move song to specific position
+		function moveSongToPosition(fromIndex, toPosition) {
+			const toIndex = parseInt(toPosition) - 1; // Convert to 0-based index
+			
+			if (toIndex >= 0 && toIndex < setlistSongs.length && toIndex !== fromIndex) {
+				const [movedSong] = setlistSongs.splice(fromIndex, 1);
+				setlistSongs.splice(toIndex, 0, movedSong);
+				updateSetlistDisplay();
+				
+				// Clear the input field after successful move
+				const inputs = document.querySelectorAll('.move-to-input');
+				inputs.forEach(input => input.value = '');
+			}
+		}
+		
+		// Jump to a specific position in the setlist
+		function jumpToPosition(position) {
+			const pos = parseInt(position) - 1;
+			if (pos >= 0 && pos < setlistSongs.length) {
+				selectedSongIndex = pos;
+				highlightSelectedSong();
+				
+				// Scroll the selected song into view
+				const songItems = document.querySelectorAll('.setlist-song-item');
+				if (songItems[pos]) {
+					songItems[pos].scrollIntoView({ behavior: 'smooth', block: 'center' });
+				}
+				
+				// Clear the input
+				document.getElementById('jumpToPosition').value = '';
+			}
+		}
+		
 		// Clear all songs from setlist
 		function clearSetlist() {
 			if (confirm('Are you sure you want to clear the entire setlist?')) {
@@ -333,6 +494,18 @@
 				item.addEventListener('dragenter', handleDragEnter);
 				item.addEventListener('dragleave', handleDragLeave);
 				item.addEventListener('drop', handleDrop);
+				
+				// Add click to select functionality
+				item.addEventListener('click', function(e) {
+					// Don't select if clicking on buttons or inputs
+					if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.classList.contains('drag-handle')) {
+						return;
+					}
+					
+					const index = parseInt(this.getAttribute('data-index'));
+					selectedSongIndex = index;
+					highlightSelectedSong();
+				});
 			});
 		}
 		
@@ -410,6 +583,14 @@
 				dragInstructions.style.display = 'none';
 			}
 			
+			// Show quick jump for longer setlists
+			const quickJump = document.getElementById('quickJump');
+			if (setlistSongs.length > 10) {
+				quickJump.style.display = 'block';
+			} else {
+				quickJump.style.display = 'none';
+			}
+			
 			let html = '';
 			setlistSongs.forEach((song, index) => {
 				// Calculate which instance this is (1st, 2nd, 3rd, etc.)
@@ -425,13 +606,20 @@
 				const duplicateIndicator = totalInstances > 1 ? `<span style="background: #ffc107; color: #000; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-left: 8px;">#${instanceNumber}</span>` : '';
 				
 				html += `
-					<div class="setlist-song-item" draggable="true">
-						<div class="drag-handle">⋮⋮</div>
+					<div class="setlist-song-item" draggable="true" data-index="${index}">
+						<div class="song-position">${index + 1}</div>
+						<div class="drag-handle" title="Drag to reorder">⋮⋮</div>
 						<div class="song-info">
 							<a href="${song.Uri}" class="song-title" target="_blank">${song.Title}</a>
 							${song.Artist ? `<div class="song-artist">${song.Artist}</div>` : ''}
 						</div>
 						<div style="display: flex; align-items: center;">
+							<div class="move-to-position">
+								<input type="number" class="move-to-input" placeholder="Pos" min="1" max="${setlistSongs.length}" 
+									onkeypress="if(event.key === 'Enter') moveSongToPosition(${index}, this.value)" 
+									title="Type position number and press Enter">
+								<button class="move-to-btn" onclick="moveSongToPosition(${index}, this.previousElementSibling.value)" title="Move to position">Go</button>
+							</div>
 							${duplicateIndicator}
 							<button class="remove-btn" onclick="removeFromSetlist(${index})">Remove</button>
 						</div>
@@ -525,7 +713,60 @@
 				const name = this.value.trim();
 				document.getElementById('setlistNameDisplay').textContent = name || 'My Setlist';
 			});
+			
+			// Add keyboard navigation
+			document.addEventListener('keydown', function(e) {
+				// Only handle keyboard shortcuts when not typing in input fields
+				if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+					return;
+				}
+				
+				if (setlistSongs.length === 0) return;
+				
+				switch(e.key) {
+					case 'ArrowUp':
+						e.preventDefault();
+						if (selectedSongIndex > 0) {
+							moveSongToPosition(selectedSongIndex, selectedSongIndex);
+							selectedSongIndex--;
+						} else if (selectedSongIndex === -1) {
+							selectedSongIndex = setlistSongs.length - 1;
+						}
+						highlightSelectedSong();
+						break;
+					case 'ArrowDown':
+						e.preventDefault();
+						if (selectedSongIndex < setlistSongs.length - 1) {
+							moveSongToPosition(selectedSongIndex, selectedSongIndex + 2);
+							selectedSongIndex++;
+						} else if (selectedSongIndex === -1) {
+							selectedSongIndex = 0;
+						}
+						highlightSelectedSong();
+						break;
+					case 'Enter':
+						e.preventDefault();
+						if (selectedSongIndex >= 0) {
+							const position = prompt(`Move song "${setlistSongs[selectedSongIndex].Title}" to position (1-${setlistSongs.length}):`);
+							if (position && !isNaN(position)) {
+								moveSongToPosition(selectedSongIndex, position);
+							}
+						}
+						break;
+				}
+			});
 		});
+		
+		// Highlight the currently selected song
+		function highlightSelectedSong() {
+			document.querySelectorAll('.setlist-song-item').forEach((item, index) => {
+				if (index === selectedSongIndex) {
+					item.classList.add('selected');
+				} else {
+					item.classList.remove('selected');
+				}
+			});
+		}
 	</script>
 </body>
 </html> 
