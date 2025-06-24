@@ -300,18 +300,14 @@
 			const uri = button.getAttribute('data-uri');
 			const artist = button.getAttribute('data-artist');
 
-			if (setlistSongs.some(song => song.Uri === uri)) {
-				alert('Song is already in the setlist!');
-				return;
-			}
-			
+		
 			setlistSongs.push({ Title: title, Uri: uri, Artist: artist });
 			updateSetlistDisplay();
 		}
 		
 		// Remove song from setlist
-		function removeFromSetlist(uri) {
-			setlistSongs = setlistSongs.filter(song => song.Uri !== uri);
+		function removeFromSetlist(index) {
+			setlistSongs.splice(index, 1);
 			updateSetlistDisplay();
 		}
 		
@@ -416,6 +412,18 @@
 			
 			let html = '';
 			setlistSongs.forEach((song, index) => {
+				// Calculate which instance this is (1st, 2nd, 3rd, etc.)
+				let instanceNumber = 1;
+				for (let i = 0; i < index; i++) {
+					if (setlistSongs[i].Uri === song.Uri) {
+						instanceNumber++;
+					}
+				}
+				
+				// Check if this song appears multiple times in the setlist
+				const totalInstances = setlistSongs.filter(s => s.Uri === song.Uri).length;
+				const duplicateIndicator = totalInstances > 1 ? `<span style="background: #ffc107; color: #000; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-left: 8px;">#${instanceNumber}</span>` : '';
+				
 				html += `
 					<div class="setlist-song-item" draggable="true">
 						<div class="drag-handle">⋮⋮</div>
@@ -423,7 +431,10 @@
 							<a href="${song.Uri}" class="song-title" target="_blank">${song.Title}</a>
 							${song.Artist ? `<div class="song-artist">${song.Artist}</div>` : ''}
 						</div>
-						<button class="remove-btn" onclick="removeFromSetlist('${song.Uri}')">Remove</button>
+						<div style="display: flex; align-items: center;">
+							${duplicateIndicator}
+							<button class="remove-btn" onclick="removeFromSetlist(${index})">Remove</button>
+						</div>
 					</div>
 				`;
 			});
