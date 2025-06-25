@@ -26,7 +26,7 @@ header aside a{
 /* Inline metronome styles for mobile browser compatibility */
 .bpm-metronome {
 	position: fixed !important;
-	top: 80px !important;
+	top: 150px !important;
 	right: 20px !important;
 	width: 50px !important;
 	height: 50px !important;
@@ -78,27 +78,55 @@ header aside a{
   font-family: Arial, sans-serif;
 }
 </style>
+<style>
+.gema-display {
+  font-size: 0.9em;
+  color: #888;
+  margin-top: 0.2em;
+  margin-bottom: 0.5em;
+  font-family: Arial, sans-serif;
+}
+</style>
+<style>
+@media print {
+  .gema-display, .bpm-display {
+    margin-right: 2em;
+  }
+  .bpm-metronome {
+    display: none !important;
+  }
+}
+</style>
 </head>
 <body>
 <section>
 	<header>
-		<hgroup>
-			<aside>
-				<a href="<?php echo($model->EditUri); ?>" title="switch to Edit/Customize view (great for Print!)">Customize</a>
-				<a href="<?php echo($model->SourceUri); ?>" target="_blank" title="view original song text">Source</a>
-			</aside>
-			<h1 class="ugsSongTitle"><?php echo($model->SongTitle); ?></h1>
-			<?php if (strlen($model->Artist) > 0): ?>
-				<h2 class="ugsArtist"><?php echo($model->Artist); ?></h2>
-			<?php endif; ?>
-			<h2 class="ugsSubtitle"><?php echo($model->Subtitle); ?></h2>
-			<?php if (strlen($model->Album) > 0): ?>
-				<h3 class="ugsAlbum"><?php echo($model->Album); ?></h3>
-			<?php endif; ?>
-			<?php if ($model->Bpm > 0): ?>
-				<div class="bpm-display" id="bpmDisplay">BPM: <?php echo($model->Bpm); ?></div>
-			<?php endif; ?>
-		</hgroup>
+		<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+			<div style="flex: 1;">
+				<hgroup>
+					<aside>
+						<a href="<?php echo($model->EditUri); ?>" title="switch to Edit/Customize view (great for Print!)">Customize</a>
+						<a href="<?php echo($model->SourceUri); ?>" target="_blank" title="view original song text">Source</a>
+					</aside>
+					<h1 class="ugsSongTitle"><?php echo($model->SongTitle); ?></h1>
+					<?php if (strlen($model->Artist) > 0): ?>
+						<h2 class="ugsArtist"><?php echo($model->Artist); ?></h2>
+					<?php endif; ?>
+					<h2 class="ugsSubtitle"><?php echo($model->Subtitle); ?></h2>
+					<?php if (strlen($model->Album) > 0): ?>
+						<h3 class="ugsAlbum"><?php echo($model->Album); ?></h3>
+					<?php endif; ?>
+				</hgroup>
+			</div>
+			<div style="text-align: right; margin-top: 0.5em;">
+				<?php if (strlen($model->Gema) > 0): ?>
+					<div class="gema-display">GEMA: <?php echo htmlspecialchars($model->Gema); ?></div>
+				<?php endif; ?>
+				<?php if ($model->Bpm > 0): ?>
+					<div class="bpm-display" id="bpmDisplay">BPM: <?php echo($model->Bpm); ?></div>
+				<?php endif; ?>
+			</div>
+		</div>
 	</header>
 		<?php
 		if ($model->UgsMeta){

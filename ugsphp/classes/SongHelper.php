@@ -20,7 +20,8 @@ class SongHelper {
 			 'body' => '[D]Where, oh, where has this [A7]stupid file gone?' . "\n" . 'Oh, [G]where or where can it [D]be?',
              'reputation' => '',
 			 'meta' => array(),
-			 'bpm' => 0
+			 'bpm' => 0,
+			 'gema' => ''
 		);
 		
 		if (!$text){
@@ -35,6 +36,7 @@ class SongHelper {
         $song->reputation = self::getReputation($text);
 		$song->meta = self::getMeta($text);
 		$song->bpm = self::getBpm($text);
+		$song->gema = self::getGema($text);
 		$song->body = $text;
 		
 		return $song;
@@ -97,6 +99,15 @@ class SongHelper {
     private static function getBpm($text) {
             $bpm = self::_matchRegEx($text, 1, "/{bpm\s*:\s*(\d+)}/i");
             return intval($bpm);
+    }
+
+    /**
+     * parses GEMA tag: {gema: xxx}
+     * @param string $text input string to be parsed
+     * @return string 
+     */
+    private static function getGema($text) {
+            return self::_matchRegEx($text, 1, "/{gema\s*:\s*(.+?)}/i");
     }
 
 	/**

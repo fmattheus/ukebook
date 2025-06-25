@@ -30,7 +30,7 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 /* Inline metronome styles for mobile browser compatibility */
 .bpm-metronome {
 	position: fixed !important;
-	top: 80px !important;
+	top: 150px !important;
 	right: 20px !important;
 	width: 50px !important;
 	height: 50px !important;
@@ -80,6 +80,23 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 	margin-bottom: 0.5em;
 	font-family: Arial, sans-serif;
 }
+
+.gema-display {
+	font-size: 0.9em;
+	color: #888;
+	margin-top: 0.2em;
+	margin-bottom: 0.5em;
+	font-family: Arial, sans-serif;
+}
+
+@media print {
+	.gema-display, .bpm-display {
+		margin-right: 2em;
+	}
+	.bpm-metronome {
+		display: none !important;
+	}
+}
 </style>
 </head>
 <body class="editableSongPage pageWidth_screen">
@@ -90,21 +107,30 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 </div>
 <section id="scalablePrintArea" class="scalablePrintArea">
 	<header>
-		<hgroup class="ugs-songInfo">
-			<h1 id="songTitle" class="ugs-songTitle"><?php echo($model->SongTitle); ?></h1>
-			<h2 id="songSubtitle" class="ugs-songSubtitle" style="display:<?php echo(GetDisplayStyle($model->Subtitle)); ?>;">
-				<?php echo($model->Subtitle); ?>
-			</h2>
-			<h2 id="songArtist" class="ugs-songArtist" style="display:<?php echo(GetDisplayStyle($model->Artist)); ?>;">
-				<?php echo($model->Artist); ?>
-			</h2>
-			<h2 id="songAlbum" class="ugs-songAlbum" style="display:<?php echo(GetDisplayStyle($model->Album)); ?>;">
-				<?php echo($model->Album); ?>
-			</h2>
-			<?php if ($model->Bpm > 0): ?>
-				<div class="bpm-display" id="bpmDisplay">BPM: <?php echo($model->Bpm); ?></div>
-			<?php endif; ?>
-		</hgroup>
+		<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+			<div style="flex: 1;">
+				<hgroup class="ugs-songInfo">
+					<h1 id="songTitle" class="ugs-songTitle"><?php echo($model->SongTitle); ?></h1>
+					<h2 id="songSubtitle" class="ugs-songSubtitle" style="display:<?php echo(GetDisplayStyle($model->Subtitle)); ?>;">
+						<?php echo($model->Subtitle); ?>
+					</h2>
+					<h2 id="songArtist" class="ugs-songArtist" style="display:<?php echo(GetDisplayStyle($model->Artist)); ?>;">
+						<?php echo($model->Artist); ?>
+					</h2>
+					<h2 id="songAlbum" class="ugs-songAlbum" style="display:<?php echo(GetDisplayStyle($model->Album)); ?>;">
+						<?php echo($model->Album); ?>
+					</h2>
+				</hgroup>
+			</div>
+			<div style="text-align: right; margin-top: 0.5em;">
+				<?php if (strlen($model->Gema) > 0): ?>
+					<div class="gema-display">GEMA: <?php echo htmlspecialchars($model->Gema); ?></div>
+				<?php endif; ?>
+				<?php if ($model->Bpm > 0): ?>
+					<div class="bpm-display" id="bpmDisplay">BPM: <?php echo($model->Bpm); ?></div>
+				<?php endif; ?>
+			</div>
+		</div>
 	</header>
 	<div class="metaInfo" id="songMeta"> </div>
 	<article id="ukeSongContainer" class="ugsLayoutTwoColumn ugs-song-wrap">

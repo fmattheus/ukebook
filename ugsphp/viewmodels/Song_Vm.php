@@ -12,6 +12,7 @@ class Song_Vm extends _base_Vm {
 	public $EditorSettingsJson = '';
 	public $Reputation = false;
 	public $Bpm = 0;
+	public $Gema = '';
 
 	public $Id = '';
 

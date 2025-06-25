@@ -1,6 +1,7 @@
 {title:My Little Grass Shack in Kealakekua}
 {artist:Lyrics &amp; Music: Bill Cogswell, Tommy Harrison and Johnny Noble &copy; 1933}
-
+{gema: 123456789-001}
+{bpm: 120}
 {ukegeeks-meta: For educational purposes ONLY -- sample, non-copyright infringing nonsense song}
 
 {c:Intro}
