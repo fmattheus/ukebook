@@ -20,7 +20,7 @@ class SongHelper {
 			 'body' => '[D]Where, oh, where has this [A7]stupid file gone?' . "\n" . 'Oh, [G]where or where can it [D]be?',
              'reputation' => '',
 			 'meta' => array(),
-			 'bpm' => 0,
+			 'tempo' => 0,
 			 'gema' => ''
 		);
 		
@@ -35,7 +35,7 @@ class SongHelper {
 		$song->album = self::getAlbum($text);
         $song->reputation = self::getReputation($text);
 		$song->meta = self::getMeta($text);
-		$song->bpm = self::getBpm($text);
+		$song->tempo = self::getTempo($text);
 		$song->gema = self::getGema($text);
 		$song->body = $text;
 		
@@ -92,13 +92,13 @@ class SongHelper {
     }
 
     /**
-     * parses BPM tag: {bpm: 120}
+     * parses Tempo tag: {tempo: 120}
      * @param string $text input string to be parsed
      * @return int 
      */
-    private static function getBpm($text) {
-            $bpm = self::_matchRegEx($text, 1, "/{bpm\s*:\s*(\d+)}/i");
-            return intval($bpm);
+    private static function getTempo($text) {
+            $tempo = self::_matchRegEx($text, 1, "/{tempo\s*:\s*(\d+)}/i");
+            return intval($tempo);
     }
 
     /**

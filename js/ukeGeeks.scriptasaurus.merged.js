@@ -635,11 +635,11 @@ ukeGeeks.data = (function() {
 		 */
 		this.key = '';
 		/**
-		 * Song's BPM (beats per minute)
-		 * @property bpm
+		 * Song's Tempo (beats per minute)
+		 * @property tempo
 		 * @type int
 		 */
-		this.bpm = 0;
+		this.tempo = 0;
 		/**
 		 *
 		 * @property body
@@ -2151,10 +2151,10 @@ ukeGeeks.cpmParser = function() {
 			// Setting Key to first chord found
 			song.key = _firstChord;
 		}
-		// BPM
-		tmp = _getInfo(songDom, _blockTypeEnum.Bpm);
+		// Tempo (formerly BPM)
+		tmp = _getInfo(songDom, _blockTypeEnum.Tempo);
 		if (tmp.length > 0) {
-			song.bpm = parseInt(tmp[0], 10);
+			song.tempo = parseInt(tmp[0], 10);
 		}
 		// Chord Definitions
 		tmp = _getInfo(songDom, _blockTypeEnum.ChordDefinition);
@@ -2221,7 +2221,7 @@ ukeGeeks.cpmParser = function() {
 		Artist: 108,
 		NewPage: 109,
 		Key: 110,
-		Bpm: 111,
+		Tempo: 111,
 		// Text Types
 		ChordText: 201,
 		PlainText: 202,
@@ -2444,8 +2444,8 @@ ukeGeeks.cpmParser = function() {
 						case 'k':
 							tmpBlk.type = _blockTypeEnum.Key;
 							break;
-						case 'bpm':
-							tmpBlk.type = _blockTypeEnum.Bpm;
+						case 'tempo':
+							tmpBlk.type = _blockTypeEnum.Tempo;
 							break;
 						case 'define':
 							tmpBlk.type = _blockTypeEnum.ChordDefinition;

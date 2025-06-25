@@ -18,11 +18,11 @@ function checkUrlOpts(){
  * @return {void}
  */
 function initMetronome() {
-	var metronome = document.getElementById('bpmMetronome');
+	var metronome = document.getElementById('tempoMetronome');
 	if (!metronome) return;
 	
-	var bpm = parseInt(metronome.getAttribute('data-bpm'));
-	if (bpm <= 0) return;
+	var tempo = parseInt(metronome.getAttribute('data-tempo'));
+	if (tempo <= 0) return;
 	
 	// Get metronome timeout from settings, default to 15 seconds
 	var metronomeTimeout = 15; // default
@@ -49,8 +49,8 @@ function initMetronome() {
 		if (isRunning) return;
 		isRunning = true;
 		
-		// Calculate animation duration based on BPM
-		var beatInterval = 60000 / bpm; // milliseconds per beat
+		// Calculate animation duration based on Tempo
+		var beatInterval = 60000 / tempo; // milliseconds per beat
 		var animationDuration = beatInterval / 1000; // convert to seconds
 		
 		// Set the animation duration dynamically with !important

@@ -28,7 +28,7 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 <link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/ugsEditorPlus.print.css" media="print" />
 <style>
 /* Inline metronome styles for mobile browser compatibility */
-.bpm-metronome {
+.tempo-metronome {
 	position: fixed !important;
 	top: 150px !important;
 	right: 20px !important;
@@ -50,11 +50,11 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 	animation-play-state: paused !important;
 }
 
-.bpm-metronome.bouncing {
+.tempo-metronome.bouncing {
 	animation-play-state: running !important;
 }
 
-.bpm-metronome.hidden {
+.tempo-metronome.hidden {
 	display: none !important;
 }
 
@@ -73,7 +73,7 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 	}
 }
 
-.bpm-display {
+.tempo-display {
 	font-size: 0.9em;
 	color: #888;
 	margin-top: 0.2em;
@@ -90,19 +90,19 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 }
 
 @media print {
-	.gema-display, .bpm-display {
+	.gema-display, .tempo-display {
 		margin-right: 2em;
 	}
-	.bpm-metronome {
+	.tempo-metronome {
 		display: none !important;
 	}
 }
 </style>
 </head>
 <body class="editableSongPage pageWidth_screen">
-<div id="bpmMetronomeContainer">
-<?php if ($model->Bpm > 0): ?>
-<div id="bpmMetronome" class="bpm-metronome" data-bpm="<?php echo($model->Bpm); ?>"><?php echo($model->Bpm); ?></div>
+<div id="tempoMetronomeContainer">
+<?php if ($model->Tempo > 0): ?>
+<div id="tempoMetronome" class="tempo-metronome" data-tempo="<?php echo($model->Tempo); ?>"><?php echo($model->Tempo); ?></div>
 <?php endif; ?>
 </div>
 <section id="scalablePrintArea" class="scalablePrintArea">
@@ -126,8 +126,8 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 				<?php if (strlen($model->Gema) > 0): ?>
 					<div class="gema-display">GEMA: <?php echo htmlspecialchars($model->Gema); ?></div>
 				<?php endif; ?>
-				<?php if ($model->Bpm > 0): ?>
-					<div class="bpm-display" id="bpmDisplay">BPM: <?php echo($model->Bpm); ?></div>
+				<?php if ($model->Tempo > 0): ?>
+					<div class="tempo-display" id="tempoDisplay">Tempo: <?php echo($model->Tempo); ?></div>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -421,11 +421,11 @@ $(function() {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var bpmDisplay = document.getElementById('bpmDisplay');
-  if (bpmDisplay) {
-    bpmDisplay.style.cursor = 'pointer';
-    bpmDisplay.title = 'Click to restart metronome';
-    bpmDisplay.onclick = function() {
+  var tempoDisplay = document.getElementById('tempoDisplay');
+  if (tempoDisplay) {
+    tempoDisplay.style.cursor = 'pointer';
+    tempoDisplay.title = 'Click to restart metronome';
+    tempoDisplay.onclick = function() {
       if (typeof restartMetronome === 'function') {
         restartMetronome();
       }

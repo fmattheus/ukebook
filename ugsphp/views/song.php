@@ -24,7 +24,7 @@ header aside a{
 </style>
 <style>
 /* Inline metronome styles for mobile browser compatibility */
-.bpm-metronome {
+.tempo-metronome {
 	position: fixed !important;
 	top: 150px !important;
 	right: 20px !important;
@@ -46,11 +46,11 @@ header aside a{
 	animation-play-state: paused !important;
 }
 
-.bpm-metronome.bouncing {
+.tempo-metronome.bouncing {
 	animation-play-state: running !important;
 }
 
-.bpm-metronome.hidden {
+.tempo-metronome.hidden {
 	display: none !important;
 }
 
@@ -70,7 +70,7 @@ header aside a{
 }
 </style>
 <style>
-.bpm-display {
+.tempo-display {
   font-size: 0.9em;
   color: #888;
   margin-top: 0.2em;
@@ -89,10 +89,10 @@ header aside a{
 </style>
 <style>
 @media print {
-  .gema-display, .bpm-display {
+  .gema-display, .tempo-display {
     margin-right: 2em;
   }
-  .bpm-metronome {
+  .tempo-metronome {
     display: none !important;
   }
 }
@@ -122,8 +122,8 @@ header aside a{
 				<?php if (strlen($model->Gema) > 0): ?>
 					<div class="gema-display">GEMA: <?php echo htmlspecialchars($model->Gema); ?></div>
 				<?php endif; ?>
-				<?php if ($model->Bpm > 0): ?>
-					<div class="bpm-display" id="bpmDisplay">BPM: <?php echo($model->Bpm); ?></div>
+				<?php if ($model->Tempo > 0): ?>
+					<div class="tempo-display" id="tempoDisplay">Tempo: <?php echo($model->Tempo); ?></div>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -137,8 +137,8 @@ header aside a{
 			echo('</div><!-- /.metaInfo -->');
 		}
 		?>
-	<?php if ($model->Bpm > 0): ?>
-	<div id="bpmMetronome" class="bpm-metronome" data-bpm="<?php echo($model->Bpm); ?>"><?php echo($model->Bpm); ?></div>
+	<?php if ($model->Tempo > 0): ?>
+	<div id="tempoMetronome" class="tempo-metronome" data-tempo="<?php echo($model->Tempo); ?>"><?php echo($model->Tempo); ?></div>
 	<?php endif; ?>
 	<div id="ukeSongContainer" class="ugsLayoutTwoColumn ugs-song-wrap">
 		<aside id="ukeChordsCanvas" class="ugs-diagrams-wrap ugs-grouped"></aside>
@@ -152,11 +152,11 @@ header aside a{
 <script type="text/javascript" src="<?php echo($model->StaticsPrefix); ?>/js/startup.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var bpmDisplay = document.getElementById('bpmDisplay');
-  if (bpmDisplay) {
-    bpmDisplay.style.cursor = 'pointer';
-    bpmDisplay.title = 'Click to restart metronome';
-    bpmDisplay.onclick = function() {
+  var tempoDisplay = document.getElementById('tempoDisplay');
+  if (tempoDisplay) {
+    tempoDisplay.style.cursor = 'pointer';
+    tempoDisplay.title = 'Click to restart metronome';
+    tempoDisplay.onclick = function() {
       if (typeof restartMetronome === 'function') {
         restartMetronome();
       }
