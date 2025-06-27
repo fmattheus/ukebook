@@ -44,6 +44,7 @@ class Song_Vm extends _base_Vm {
 	public $NextSongIndex = null;
 	public $SongInstanceIndex = 0;
 	public $SongInstanceTotal = 0;
+	public $Transpose = 0;
 
 	function __construct()
 	{

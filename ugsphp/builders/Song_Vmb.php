@@ -65,6 +65,8 @@ class Song_Vmb extends _base_Vmb {
 			}
 			$viewModel->CurrentIndex = $currentIndex;
 			$viewModel->CurrentSongId = $setlistData['songs'][$currentIndex]['Uri'] ?? '';
+			// Set transpose value from setlist
+			$viewModel->Transpose = intval($setlistData['songs'][$currentIndex]['Transpose'] ?? 0);
 			// Set previous song
 			if ($currentIndex > 0) {
 				$prevSong = $setlistData['songs'][$currentIndex - 1];

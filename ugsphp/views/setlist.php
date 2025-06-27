@@ -428,8 +428,7 @@
 			const uri = button.getAttribute('data-uri');
 			const artist = button.getAttribute('data-artist');
 
-		
-			setlistSongs.push({ Title: title, Uri: uri, Artist: artist });
+			setlistSongs.push({ Title: title, Uri: uri, Artist: artist, Transpose: '0' });
 			updateSetlistDisplay();
 		}
 		
@@ -605,6 +604,15 @@
 				const totalInstances = setlistSongs.filter(s => s.Uri === song.Uri).length;
 				const duplicateIndicator = totalInstances > 1 ? `<span style="background: #ffc107; color: #000; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-left: 8px;">#${instanceNumber}</span>` : '';
 				
+				// Transpose dropdown options
+				let transposeValue = (song.Transpose !== undefined && song.Transpose !== null && song.Transpose !== '') ? song.Transpose : '0';
+				let transposeOptions = '';
+				for (let t = -11; t <= 11; t++) {
+					let label = t > 0 ? `+${t}` : t.toString();
+					if (t === 0) label = '0';
+					transposeOptions += `<option value="${label}"${transposeValue == label ? ' selected' : ''}>${label}</option>`;
+				}
+				
 				html += `
 					<div class="setlist-song-item" draggable="true" data-index="${index}">
 						<div class="song-position">${index + 1}</div>
@@ -612,8 +620,13 @@
 						<div class="song-info">
 							<a href="${song.Uri}" class="song-title" target="_blank">${song.Title}</a>
 							${song.Artist ? `<div class="song-artist">${song.Artist}</div>` : ''}
-							<div style="margin-top: 4px;">
+							<div style="margin-top: 4px; display: flex; gap: 8px; align-items: center;">
 								<input type="text" class="leader-input" placeholder="Leader (optional)" value="${song.Leader ? song.Leader : ''}" style="width: 120px; font-size: 12px; padding: 2px 4px; border: 1px solid #ccc; border-radius: 3px;" onchange="updateLeader(${index}, this.value)">
+								<label style="font-size: 12px; color: #333;">Transpose
+									<select class="transpose-select" style="width: 70px; font-size: 12px; padding: 2px 4px; border: 1px solid #ccc; border-radius: 3px; margin-left: 4px;" onchange="updateTranspose(${index}, this.value)">
+										${transposeOptions}
+									</select>
+								</label>
 							</div>
 						</div>
 						<div style="display: flex; align-items: center;">
@@ -774,6 +787,12 @@
 		// Add this function to handle Leader input changes
 		function updateLeader(index, value) {
 			setlistSongs[index].Leader = value;
+			saveSetlist();
+		}
+		
+		// Add this function to handle Transpose input changes
+		function updateTranspose(index, value) {
+			setlistSongs[index].Transpose = value;
 			saveSetlist();
 		}
 	</script>

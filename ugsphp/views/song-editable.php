@@ -534,6 +534,38 @@ $(function() {
 	<?php
 	}
 ?>
+
+<?php if ($model->IsSetlistNavigation && $model->Transpose != 0): ?>
+	// Auto-trigger transpose if setlist has a non-zero transpose value
+	$(document).ready(function() {
+		setTimeout(function() {
+			var transposeValue = <?php echo $model->Transpose; ?>;
+			var transposeAction = '';
+			
+			if (transposeValue > 0) {
+				transposeAction = 'up_' + transposeValue;
+			} else if (transposeValue < 0) {
+				transposeAction = 'down_' + Math.abs(transposeValue);
+			}
+			
+			if (transposeAction) {
+				// Trigger the transpose action using the jQuery event system
+				$.event.trigger('option:click', {
+					action: 'transpose',
+					value: transposeAction
+				});
+				
+				// Update the UI to show the current transpose state
+				var transposePicker = $('#transposePicker');
+				if (transposePicker.length) {
+					transposePicker.find('li').removeClass('checked');
+					transposePicker.find('a[href="#' + transposeAction + '"]').parent().addClass('checked');
+					transposePicker.find('span').text('<?php echo ($model->Transpose > 0 ? '+' : '') . $model->Transpose; ?> semitones');
+				}
+			}
+		}, 500); // Small delay to ensure the editor is fully initialized
+	});
+<?php endif; ?>
 });
 </script>
 <script>
