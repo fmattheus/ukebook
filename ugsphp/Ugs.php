@@ -127,7 +127,8 @@ class Ugs{
 			Actions::DeleteSetlist,
 			Actions::CreatePDF,
 			Actions::ListPDFs,
-			Actions::DownloadPDF
+			Actions::DownloadPDF,
+			Actions::StartSetlist
 		);
 		
 		if (in_array($action, $adminActions) && !$user->IsAdmin) {
@@ -191,6 +192,9 @@ class Ugs{
 				break;
 			case Actions::DownloadPDF:
 				$builder = new DownloadPDF_Vmb();
+				break;
+			case Actions::StartSetlist:
+				$builder = new StartSetlist_Vmb();
 				break;
 		        default:
         			$builder = Config::UseDetailedLists
@@ -298,6 +302,8 @@ class Ugs{
 				return 'pdf-list.php';
 			case Actions::DownloadPDF:
 				return 'download-pdf.php';
+			case Actions::StartSetlist:
+				return 'start-setlist.php';
 			default:
 				return Config::UseDetailedLists ? 'song-list-detailed.php' : 'song-list.php';
 		}

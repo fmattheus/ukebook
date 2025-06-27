@@ -97,14 +97,116 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 		display: none !important;
 	}
 }
+
+/* Setlist Navigation Styles */
+.setlist-navigation {
+	float: right !important;
+	margin: 0 0 20px 20px !important;
+	width: 240px !important;
+	background: rgba(255, 255, 255, 0.95) !important;
+	border: 2px solid #007cba !important;
+	border-radius: 8px !important;
+	padding: 15px !important;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+	font-family: Arial, sans-serif !important;
+}
+
+@media (max-width: 700px) {
+	.setlist-navigation {
+		float: none !important;
+		margin: 0 0 20px 0 !important;
+		width: 100% !important;
+	}
+}
+
+.setlist-info h4 {
+	margin: 0 0 5px 0 !important;
+	color: #007cba !important;
+	font-size: 14px !important;
+	font-weight: bold !important;
+}
+
+.setlist-navigation-controls {
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 6px !important;
+	margin-bottom: 0 !important;
+}
+
+.nav-link {
+	display: inline-block !important;
+	padding: 0 !important;
+	background: none !important;
+	color: #007cba !important;
+	text-decoration: underline !important;
+	border: none !important;
+	font-size: 13px !important;
+	font-weight: normal !important;
+	transition: color 0.2s !important;
+	margin-bottom: 2px !important;
+}
+
+.nav-link:hover {
+	color: #005a87 !important;
+}
+
+@media print {
+	.setlist-navigation {
+		display: none !important;
+	}
+}
+
+<?php if ($model->IsSetlistNavigation): ?>
+.tempo-metronome {
+	top: 200px !important;
+}
+@media (max-width: 700px) {
+	.tempo-metronome {
+		top: 150px !important;
+	}
+}
+<?php endif; ?>
 </style>
 </head>
-<body class="editableSongPage pageWidth_screen">
+<body class="editableSongPage pageWidth_screen<?php if ($model->IsSetlistNavigation) echo ' hasSetlistNav'; ?>">
 <div id="tempoMetronomeContainer">
 <?php if ($model->Tempo > 0): ?>
 <div id="tempoMetronome" class="tempo-metronome" data-tempo="<?php echo($model->Tempo); ?>"><?php echo($model->Tempo); ?></div>
 <?php endif; ?>
 </div>
+
+<?php if ($model->IsSetlistNavigation): ?>
+<div id="setlistNavigationContainer" class="setlist-navigation">
+	<div class="setlist-info">
+		<h4>Setlist - <?php echo htmlspecialchars($model->SetlistName); ?></h4>
+	</div>
+	<div class="setlist-navigation-controls" style="display: flex; flex-direction: column; gap: 6px;">
+		<?php
+		// Previous link (if not first song)
+		if (!empty($model->PreviousSongId) && $model->CurrentIndex > 0) {
+			$prevUrl = $model->PreviousSongId;
+			$setlistParam = Config::UseModRewrite ? '?setlist=' : '&setlist=';
+			$prevUrl .= $setlistParam . urlencode($_GET['setlist'] ?? '');
+			$prevUrl .= '&setlist_index=' . urlencode($model->PreviousSongIndex);
+			echo '<a href="' . htmlspecialchars($prevUrl) . '" class="nav-link prev-link">&larr; Previous Song</a>';
+		}
+		// Next link (if not last song)
+		if (!empty($model->NextSongId) && $model->CurrentIndex < count($model->SetlistSongs) - 1) {
+			$nextSong = $model->SetlistSongs[$model->CurrentIndex + 1];
+			$nextTitle = isset($nextSong['Title']) ? $nextSong['Title'] : (isset($nextSong['title']) ? $nextSong['title'] : '');
+			$nextArtist = isset($nextSong['Artist']) ? $nextSong['Artist'] : (isset($nextSong['artist']) ? $nextSong['artist'] : '');
+			$nextUrl = $model->NextSongId;
+			$setlistParam = Config::UseModRewrite ? '?setlist=' : '&setlist=';
+			$nextUrl .= $setlistParam . urlencode($_GET['setlist'] ?? '');
+			$nextUrl .= '&setlist_index=' . urlencode($model->NextSongIndex);
+			echo '<a href="' . htmlspecialchars($nextUrl) . '" class="nav-link next-link">Next: ' . htmlspecialchars($nextTitle);
+			if ($nextArtist) echo ' <span style="color:#888;">by ' . htmlspecialchars($nextArtist) . '</span>';
+			echo ' &rarr;</a>';
+		}
+		?>
+	</div>
+</div>
+<?php endif; ?>
 <section id="scalablePrintArea" class="scalablePrintArea">
 	<header>
 		<div style="display: flex; justify-content: space-between; align-items: flex-start;">

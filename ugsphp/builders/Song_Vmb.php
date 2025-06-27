@@ -36,6 +36,67 @@ class Song_Vmb extends _base_Vmb {
         $viewModel->IsUpdateAllowed = $this->SiteUser->MayEdit && $this->SiteUser->IsAuthenticated && !(!$this->SiteUser->IsAdmin && $song->reputation);
 
 		$viewModel->EditorSettingsJson = $this->getSettings();
+		
+		// Check if this is part of a setlist navigation
+		$setlistFile = isset($_GET['setlist']) ? $_GET['setlist'] : '';
+		$setlistIndex = isset($_GET['setlist_index']) ? intval($_GET['setlist_index']) : 0;
+		// If no setlist in GET, try to get it from the URL path (for mod_rewrite)
+		if (empty($setlistFile)) {
+			$requestUri = $_SERVER['REQUEST_URI'];
+			$path = parse_url($requestUri, PHP_URL_PATH);
+			$pathParts = explode('/', trim($path, '/'));
+			// Look for the setlist filename in the path
+			foreach ($pathParts as $part) {
+				if (strpos($part, '.json') !== false) {
+					$setlistFile = $part;
+					break;
+				}
+			}
+		}
+		if (!empty($setlistFile) && isset($_SESSION['current_setlist'])) {
+			$setlistData = $_SESSION['current_setlist'];
+			$viewModel->IsSetlistNavigation = true;
+			$viewModel->SetlistName = $setlistData['name'];
+			$viewModel->SetlistSongs = $setlistData['songs'];
+			// Use setlist_index to determine current song
+			$currentIndex = $setlistIndex;
+			if ($currentIndex < 0 || $currentIndex >= count($setlistData['songs'])) {
+				$currentIndex = 0;
+			}
+			$viewModel->CurrentIndex = $currentIndex;
+			$viewModel->CurrentSongId = $setlistData['songs'][$currentIndex]['Uri'] ?? '';
+			// Set previous song
+			if ($currentIndex > 0) {
+				$prevSong = $setlistData['songs'][$currentIndex - 1];
+				$viewModel->PreviousSongId = $prevSong['Uri'] ?? '';
+				$viewModel->PreviousSongIndex = $currentIndex - 1;
+			}
+			// Set next song
+			if ($currentIndex < count($setlistData['songs']) - 1) {
+				$nextSong = $setlistData['songs'][$currentIndex + 1];
+				$viewModel->NextSongId = $nextSong['Uri'] ?? '';
+				$viewModel->NextSongIndex = $currentIndex + 1;
+			}
+			// Add instance info if song appears multiple times
+			$songUri = $setlistData['songs'][$currentIndex]['Uri'] ?? '';
+			$totalInstances = 0;
+			$instanceIndex = 0;
+			for ($i = 0; $i <= $currentIndex; $i++) {
+				if (($setlistData['songs'][$i]['Uri'] ?? '') === $songUri) {
+					$instanceIndex++;
+				}
+			}
+			foreach ($setlistData['songs'] as $song) {
+				if (($song['Uri'] ?? '') === $songUri) {
+					$totalInstances++;
+				}
+			}
+			$viewModel->SongInstanceIndex = $instanceIndex;
+			$viewModel->SongInstanceTotal = $totalInstances;
+			// Update session with current index
+			$_SESSION['current_setlist']['current_index'] = $currentIndex;
+		}
+		
 		return $viewModel;
 	}
 

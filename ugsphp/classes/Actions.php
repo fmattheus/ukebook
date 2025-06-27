@@ -23,6 +23,7 @@ final class Actions {
 	const CreatePDF = 13;
 	const ListPDFs = 14;
 	const DownloadPDF = 15;
+	const StartSetlist = 16;
 
 	/**
 	 * convert passed in string value to corresponding Actions enum
@@ -46,6 +47,7 @@ final class Actions {
 		 	case 'createpdf': return self::CreatePDF;
 		 	case 'listpdfs': return self::ListPDFs;
 		 	case 'downloadpdf': return self::DownloadPDF;
+		 	case 'startsetlist': return self::StartSetlist;
 		 }
 		 return self::Songbook;
 	}
@@ -72,6 +74,7 @@ final class Actions {
 			case self::CreatePDF: return 'CreatePDF';
 			case self::ListPDFs: return 'ListPDFs';
 			case self::DownloadPDF: return 'DownloadPDF';
+			case self::StartSetlist: return 'StartSetlist';
 		}
 		return 'Songbook';
 	}

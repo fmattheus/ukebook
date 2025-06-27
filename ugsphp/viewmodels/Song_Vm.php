@@ -30,6 +30,21 @@ class Song_Vm extends _base_Vm {
 	 */
 	public $IsUpdateAllowed = false;
 
+	/**
+	 * Setlist navigation properties
+	 */
+	public $IsSetlistNavigation = false;
+	public $SetlistName = '';
+	public $SetlistSongs = array();
+	public $CurrentIndex = 0;
+	public $CurrentSongId = '';
+	public $PreviousSongId = '';
+	public $NextSongId = '';
+	public $PreviousSongIndex = null;
+	public $NextSongIndex = null;
+	public $SongInstanceIndex = 0;
+	public $SongInstanceTotal = 0;
+
 	function __construct()
 	{
 		parent::__construct();

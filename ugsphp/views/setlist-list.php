@@ -185,6 +185,7 @@
 						
 						<div class="setlist-actions">
 							<button class="btn btn-primary" onclick="loadSetlist(<?php echo htmlspecialchars(json_encode($setlist['songs'])); ?>, '<?php echo htmlspecialchars($setlist['name']); ?>')">Edit Setlist</button>
+							<button class="btn btn-success" onclick="startSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>')">Start Setlist</button>
 							<button class="btn btn-success" onclick="createPDF('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')">Create PDFs</button>
 							<?php if ($model->CanEdit): ?>
 								<button class="btn btn-danger" onclick="deleteSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')">Delete</button>
@@ -279,6 +280,18 @@
 			
 			// Redirect to setlist manager
 			window.location.href = '<?php echo Ugs::MakeUri(Actions::Setlist); ?>';
+		}
+		
+		// Start a setlist
+		function startSetlist(filename) {
+			// Redirect to start setlist action
+			<?php if (Config::UseModRewrite): ?>
+				// For mod_rewrite, use pretty URL with query parameter
+				window.location.href = '<?php echo Ugs::MakeUri(Actions::StartSetlist); ?>?setlist=' + encodeURIComponent(filename);
+			<?php else: ?>
+				// For non-mod_rewrite, use query parameter format
+				window.location.href = '<?php echo Ugs::MakeUri(Actions::StartSetlist); ?>&setlist=' + encodeURIComponent(filename);
+			<?php endif; ?>
 		}
 		
 		// Delete a setlist
