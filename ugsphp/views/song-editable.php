@@ -156,6 +156,10 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 	}
 }
 
+.setlist-navigation strong {
+	font-weight: bold !important;
+}
+
 <?php if ($model->IsSetlistNavigation): ?>
 .tempo-metronome {
 	top: 200px !important;
@@ -179,6 +183,17 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 <div id="setlistNavigationContainer" class="setlist-navigation">
 	<div class="setlist-info">
 		<h4>Setlist - <?php echo htmlspecialchars($model->SetlistName); ?></h4>
+		<?php
+		// Show leader of the next song if present
+		$nextSong = $model->SetlistSongs[$model->CurrentIndex + 1] ?? null;
+		$nextLeader = '';
+		if ($nextSong) {
+			$nextLeader = $nextSong['Leader'] ?? $nextSong['leader'] ?? '';
+		}
+		if ($nextLeader) {
+			echo '<div style="font-size: 0.97em; color: #444; margin-bottom: 4px;"><strong>' . htmlspecialchars($nextLeader) . '</strong>, you\'re up next. Please tune your instrument and come to the front before the current song finishes</div>';
+		}
+		?>
 	</div>
 	<div class="setlist-navigation-controls" style="display: flex; flex-direction: column; gap: 6px;">
 		<?php

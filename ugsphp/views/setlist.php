@@ -612,6 +612,9 @@
 						<div class="song-info">
 							<a href="${song.Uri}" class="song-title" target="_blank">${song.Title}</a>
 							${song.Artist ? `<div class="song-artist">${song.Artist}</div>` : ''}
+							<div style="margin-top: 4px;">
+								<input type="text" class="leader-input" placeholder="Leader (optional)" value="${song.Leader ? song.Leader : ''}" style="width: 120px; font-size: 12px; padding: 2px 4px; border: 1px solid #ccc; border-radius: 3px;" onchange="updateLeader(${index}, this.value)">
+							</div>
 						</div>
 						<div style="display: flex; align-items: center;">
 							<div class="move-to-position">
@@ -766,6 +769,12 @@
 					item.classList.remove('selected');
 				}
 			});
+		}
+		
+		// Add this function to handle Leader input changes
+		function updateLeader(index, value) {
+			setlistSongs[index].Leader = value;
+			saveSetlist();
 		}
 	</script>
 </body>
