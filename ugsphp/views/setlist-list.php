@@ -8,75 +8,127 @@
 	<link rel="stylesheet" href="<?php echo($model->StaticsPrefix); ?>css/ugsphp.css" />
 	<style>
 		.setlist-container {
-			max-width: 1200px;
+			max-width: 1400px;
 			margin: 0 auto;
 			padding: 20px;
 		}
 		
 		.setlist-header {
-			text-align: center;
 			margin-bottom: 30px;
 		}
 		
-		.setlist-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-			gap: 20px;
+		.header-controls {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20px;
+			flex-wrap: wrap;
+			gap: 15px;
 		}
 		
-		.setlist-card {
-			border: 1px solid #ddd;
-			border-radius: 8px;
-			padding: 20px;
-			background: white;
-			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		.header-left {
+			display: flex;
+			align-items: center;
+			gap: 15px;
 		}
 		
-		.setlist-card h3 {
-			margin: 0 0 10px 0;
-			color: #333;
-			font-size: 1.2em;
-		}
-		
-		.setlist-meta {
-			color: #666;
-			font-size: 0.9em;
-			margin-bottom: 15px;
-		}
-		
-		.setlist-songs {
-			max-height: 200px;
-			overflow-y: auto;
-			margin-bottom: 15px;
-			border: 1px solid #eee;
-			border-radius: 4px;
-			padding: 10px;
-			background: #f9f9f9;
-		}
-		
-		.setlist-song {
-			padding: 5px 0;
-			border-bottom: 1px solid #eee;
-		}
-		
-		.setlist-song:last-child {
-			border-bottom: none;
-		}
-		
-		.setlist-actions {
+		.header-right {
 			display: flex;
 			gap: 10px;
+		}
+		
+		.search-controls {
+			display: flex;
+			gap: 15px;
+			align-items: center;
+			margin-bottom: 20px;
 			flex-wrap: wrap;
 		}
 		
+		.search-box {
+			flex: 1;
+			min-width: 300px;
+		}
+		
+		.search-box input {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			font-size: 14px;
+		}
+		
+		.search-options {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin-top: 8px;
+		}
+		
+		.toggle-switch {
+			position: relative;
+			display: inline-block;
+			width: 50px;
+			height: 24px;
+		}
+		
+		.toggle-switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+		
+		.toggle-slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			transition: .4s;
+			border-radius: 24px;
+		}
+		
+		.toggle-slider:before {
+			position: absolute;
+			content: "";
+			height: 18px;
+			width: 18px;
+			left: 3px;
+			bottom: 3px;
+			background-color: white;
+			transition: .4s;
+			border-radius: 50%;
+		}
+		
+		input:checked + .toggle-slider {
+			background-color: #007cba;
+		}
+		
+		input:checked + .toggle-slider:before {
+			transform: translateX(26px);
+		}
+		
+		.toggle-label {
+			font-size: 12px;
+			color: #666;
+			white-space: nowrap;
+		}
+		
 		.btn {
-			padding: 8px 12px;
+			padding: 8px 16px;
 			border: none;
 			border-radius: 4px;
 			cursor: pointer;
 			text-decoration: none;
 			display: inline-block;
-			font-size: 0.9em;
+			font-size: 14px;
+			transition: opacity 0.2s;
+		}
+		
+		.btn:hover {
+			opacity: 0.8;
 		}
 		
 		.btn-primary {
@@ -94,8 +146,90 @@
 			color: white;
 		}
 		
-		.btn:hover {
-			opacity: 0.8;
+		.btn-secondary {
+			background: #6c757d;
+			color: white;
+		}
+		
+		.setlist-table {
+			width: 100%;
+			border-collapse: collapse;
+			background: white;
+			border-radius: 8px;
+			overflow: hidden;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+		}
+		
+		.setlist-table th {
+			background: #f8f9fa;
+			padding: 12px 15px;
+			text-align: left;
+			font-weight: 600;
+			color: #495057;
+			border-bottom: 2px solid #dee2e6;
+			cursor: pointer;
+			user-select: none;
+			position: relative;
+		}
+		
+		.setlist-table th:hover {
+			background: #e9ecef;
+		}
+		
+		.setlist-table th.sortable::after {
+			content: '↕';
+			position: absolute;
+			right: 8px;
+			color: #6c757d;
+			font-size: 12px;
+		}
+		
+		.setlist-table th.sort-asc::after {
+			content: '↑';
+			color: #007cba;
+		}
+		
+		.setlist-table th.sort-desc::after {
+			content: '↓';
+			color: #007cba;
+		}
+		
+		.setlist-table td {
+			padding: 12px 15px;
+			border-bottom: 1px solid #dee2e6;
+			vertical-align: middle;
+		}
+		
+		.setlist-table tr:hover {
+			background: #f8f9fa;
+		}
+		
+		.setlist-table tr:last-child td {
+			border-bottom: none;
+		}
+		
+		.setlist-name {
+			font-weight: 600;
+			color: #333;
+		}
+		
+		.setlist-meta {
+			color: #666;
+			font-size: 0.9em;
+		}
+		
+		.actions-cell {
+			white-space: nowrap;
+		}
+		
+		.actions-cell .btn {
+			margin-right: 5px;
+			padding: 6px 12px;
+			font-size: 12px;
+		}
+		
+		.actions-cell .btn:last-child {
+			margin-right: 0;
 		}
 		
 		.no-setlists {
@@ -103,52 +237,76 @@
 			padding: 40px;
 			color: #666;
 			font-style: italic;
+			background: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 		}
 		
-		.navigation {
-			text-align: center;
-			margin-bottom: 20px;
+		.results-info {
+			margin-bottom: 15px;
+			color: #666;
+			font-size: 14px;
 		}
 		
-		.navigation a {
-			display: inline-block;
-			padding: 10px 20px;
-			margin: 0 10px;
-			background: #007cba;
-			color: white;
-			text-decoration: none;
-			border-radius: 4px;
-		}
-		
-		.navigation a:hover {
-			background: #005a87;
+		@media (max-width: 768px) {
+			.setlist-table {
+				font-size: 12px;
+			}
+			
+			.setlist-table th,
+			.setlist-table td {
+				padding: 8px 10px;
+			}
+			
+			.actions-cell .btn {
+				padding: 4px 8px;
+				font-size: 11px;
+			}
+			
+			.header-controls {
+				flex-direction: column;
+				align-items: stretch;
+			}
+			
+			.search-controls {
+				flex-direction: column;
+			}
+			
+			.search-box {
+				min-width: auto;
+			}
 		}
 	</style>
 </head>
 <body>
 	<div class="setlist-container">
 		<div class="setlist-header">
-			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-				<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::Songbook); ?>'" style="background: #007cba; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">← Back to Songbook</button>
-				<div style="text-align: center;">
-					<h1>Saved Setlists</h1>
-					<p><?php echo count($model->Setlists); ?> setlist<?php echo count($model->Setlists) != 1 ? 's' : ''; ?> found</p>
+			<div class="header-controls">
+				<div class="header-left">
+					<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::Songbook); ?>'" class="btn btn-primary">← Back to Songbook</button>
+					<div>
+						<h1 style="margin: 0; font-size: 24px;">Saved Setlists</h1>
+						<div class="results-info" id="resultsInfo">
+							<?php echo count($model->Setlists); ?> setlist<?php echo count($model->Setlists) != 1 ? 's' : ''; ?> found
+						</div>
+					</div>
 				</div>
-				<div style="display: flex; gap: 10px;">
-					<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::Setlist); ?>'" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">➕ Create New Setlist</button>
-					<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::ListPDFs); ?>'" style="background: #6f42c1; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">📄 View PDFs</button>
+				<div class="header-right">
+					<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::Setlist); ?>'" class="btn btn-success">➕ Create New Setlist</button>
+					<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::ListPDFs); ?>'" class="btn btn-secondary">📄 View PDFs</button>
 				</div>
 			</div>
 			
-			<div class="search-container" style="margin: 20px 0;">
-				<div style="display: flex; gap: 15px; align-items: center; justify-content: center; flex-wrap: wrap;">
-					<input type="text" id="setlistSearch" placeholder="Search setlist names or song names..." style="width: 100%; max-width: 400px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
-					<select id="sortSelect" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; background: white;">
-						<option value="date-desc">Newest First</option>
-						<option value="date-asc">Oldest First</option>
-						<option value="name-asc">Name A-Z</option>
-						<option value="name-desc">Name Z-A</option>
-					</select>
+			<div class="search-controls">
+				<div class="search-box">
+					<input type="text" id="setlistSearch" placeholder="Search setlist names..." />
+					<div class="search-options">
+						<label class="toggle-switch">
+							<input type="checkbox" id="searchSongsToggle">
+							<span class="toggle-slider"></span>
+						</label>
+						<span class="toggle-label">Also search song & artist names</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -159,116 +317,161 @@
 				<p>Create your first setlist in the <a href="<?php echo Ugs::MakeUri(Actions::Setlist); ?>">Setlist Manager</a>!</p>
 			</div>
 		<?php else: ?>
-			<div class="setlist-grid" id="setlistGrid">
-				<?php foreach($model->Setlists as $setlist): ?>
-					<div class="setlist-card" 
-						 data-name="<?php echo htmlspecialchars(strtolower($setlist['name'])); ?>"
-						 data-songs="<?php echo htmlspecialchars(strtolower(implode(' ', array_map(function($song) { return $song['Title'] . ' ' . $song['Artist']; }, $setlist['songs'])))); ?>"
-						 data-created="<?php echo htmlspecialchars($setlist['created']); ?>"
-						 data-timestamp="<?php echo strtotime($setlist['created']); ?>">
-						<h3><?php echo htmlspecialchars($setlist['name']); ?></h3>
-						<div class="setlist-meta">
-							<strong><?php echo $setlist['songCount']; ?> song<?php echo $setlist['songCount'] != 1 ? 's' : ''; ?></strong><br>
-							Created: <?php echo htmlspecialchars($setlist['created']); ?>
-						</div>
-						
-						<div class="setlist-songs">
-							<?php foreach($setlist['songs'] as $song): ?>
-								<div class="setlist-song">
-									<strong><?php echo htmlspecialchars($song['Title']); ?></strong>
-									<?php if (!empty($song['Artist'])): ?>
-										<br><em><?php echo htmlspecialchars($song['Artist']); ?></em>
-									<?php endif; ?>
-								</div>
-							<?php endforeach; ?>
-						</div>
-						
-						<div class="setlist-actions">
-							<button class="btn btn-primary" onclick="loadSetlist(<?php echo htmlspecialchars(json_encode($setlist['songs'])); ?>, '<?php echo htmlspecialchars($setlist['name']); ?>')">Edit Setlist</button>
-							<button class="btn btn-success" onclick="startSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>')">Start Setlist</button>
-							<button class="btn btn-success" onclick="createPDF('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')">Create PDFs</button>
-							<?php if ($model->CanEdit): ?>
-								<button class="btn btn-danger" onclick="deleteSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')">Delete</button>
-							<?php endif; ?>
-						</div>
-					</div>
-				<?php endforeach; ?>
-			</div>
+			<table class="setlist-table" id="setlistTable">
+				<thead>
+					<tr>
+						<th class="sortable" data-sort="name">Setlist Name</th>
+						<th class="sortable" data-sort="songs">Songs</th>
+						<th class="sortable" data-sort="date">Created</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody id="setlistTableBody">
+					<?php foreach($model->Setlists as $setlist): ?>
+						<tr data-name="<?php echo htmlspecialchars(strtolower($setlist['name'])); ?>"
+							data-songs="<?php echo $setlist['songCount']; ?>"
+							data-created="<?php echo htmlspecialchars($setlist['created']); ?>"
+							data-timestamp="<?php echo strtotime($setlist['created']); ?>"
+							data-song-artist="<?php echo htmlspecialchars(strtolower(implode(' ', array_map(function($song) { return ($song['Title'] ?? '') . ' ' . ($song['Artist'] ?? ''); }, $setlist['songs'])))); ?>">
+							<td class="setlist-name"><?php echo htmlspecialchars($setlist['name']); ?></td>
+							<td class="setlist-meta"><?php echo $setlist['songCount']; ?> song<?php echo $setlist['songCount'] != 1 ? 's' : ''; ?></td>
+							<td class="setlist-meta"><?php echo htmlspecialchars($setlist['created']); ?></td>
+							<td class="actions-cell">
+								<button class="btn btn-primary" onclick="loadSetlist(<?php echo htmlspecialchars(json_encode($setlist['songs'])); ?>, '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Edit Setlist">Edit</button>
+								<button class="btn btn-success" onclick="startSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>')" title="Start Setlist">Start</button>
+								<button class="btn btn-secondary" onclick="createPDF('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Create PDF">PDF</button>
+								<?php if ($model->CanEdit): ?>
+									<button class="btn btn-danger" onclick="deleteSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Delete Setlist">Del</button>
+								<?php endif; ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
 		<?php endif; ?>
 	</div>
 
 	<script>
 		let allSetlists = []; // Store all setlists for sorting
+		let currentSort = { column: 'date', direction: 'desc' };
 		
 		// Initialize all setlists array on page load
 		document.addEventListener('DOMContentLoaded', function() {
-			const setlistCards = document.querySelectorAll('#setlistGrid .setlist-card');
-			allSetlists = Array.from(setlistCards);
+			const setlistRows = document.querySelectorAll('#setlistTableBody tr');
+			allSetlists = Array.from(setlistRows);
+			
+			// Set up sortable column headers
+			document.querySelectorAll('.sortable').forEach(header => {
+				header.addEventListener('click', function() {
+					const column = this.getAttribute('data-sort');
+					
+					// Update sort direction
+					if (currentSort.column === column) {
+						currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+					} else {
+						currentSort.column = column;
+						currentSort.direction = 'asc';
+					}
+					
+					// Update visual indicators
+					document.querySelectorAll('.sortable').forEach(h => {
+						h.classList.remove('sort-asc', 'sort-desc');
+					});
+					this.classList.add('sort-' + currentSort.direction);
+					
+					// Sort the table
+					sortSetlists();
+				});
+			});
+			
+			// Initial sort by date descending
+			document.querySelector('[data-sort="date"]').classList.add('sort-desc');
 		});
 		
 		// Sort functionality
 		function sortSetlists() {
-			const sortValue = document.getElementById('sortSelect').value;
-			const setlistGrid = document.getElementById('setlistGrid');
-			const visibleSetlists = Array.from(setlistGrid.querySelectorAll('.setlist-card:not([style*="display: none"])'));
+			const tbody = document.getElementById('setlistTableBody');
+			const visibleSetlists = Array.from(tbody.querySelectorAll('tr:not([style*="display: none"])'));
 			
 			// Sort the visible setlists
 			visibleSetlists.sort((a, b) => {
-				switch(sortValue) {
-					case 'date-desc':
-						return parseInt(b.getAttribute('data-timestamp')) - parseInt(a.getAttribute('data-timestamp'));
-					case 'date-asc':
-						return parseInt(a.getAttribute('data-timestamp')) - parseInt(b.getAttribute('data-timestamp'));
-					case 'name-asc':
-						return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
-					case 'name-desc':
-						return b.getAttribute('data-name').localeCompare(a.getAttribute('data-name'));
+				let aVal, bVal;
+				
+				switch(currentSort.column) {
+					case 'name':
+						aVal = a.getAttribute('data-name');
+						bVal = b.getAttribute('data-name');
+						return currentSort.direction === 'asc' ? 
+							aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+					case 'songs':
+						aVal = parseInt(a.getAttribute('data-songs'));
+						bVal = parseInt(b.getAttribute('data-songs'));
+						return currentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+					case 'date':
+						aVal = parseInt(a.getAttribute('data-timestamp'));
+						bVal = parseInt(b.getAttribute('data-timestamp'));
+						return currentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
 					default:
 						return 0;
 				}
 			});
 			
 			// Reorder the DOM elements
-			visibleSetlists.forEach(card => {
-				setlistGrid.appendChild(card);
+			visibleSetlists.forEach(row => {
+				tbody.appendChild(row);
 			});
 		}
 		
 		// Search functionality
 		document.getElementById('setlistSearch').addEventListener('input', function() {
-			const searchTerm = this.value.toLowerCase().trim();
-			const setlistCards = document.querySelectorAll('#setlistGrid .setlist-card');
+			performSearch();
+		});
+		
+		// Toggle switch functionality
+		document.getElementById('searchSongsToggle').addEventListener('change', function() {
+			performSearch();
+		});
+		
+		function performSearch() {
+			const searchTerm = document.getElementById('setlistSearch').value.toLowerCase().trim();
+			const searchSongs = document.getElementById('searchSongsToggle').checked;
+			const setlistRows = document.querySelectorAll('#setlistTableBody tr');
 			let visibleCount = 0;
 			
-			setlistCards.forEach(card => {
-				const setName = card.getAttribute('data-name');
-				const setSongs = card.getAttribute('data-songs');
+			setlistRows.forEach(row => {
+				const setName = row.getAttribute('data-name');
+				let shouldShow = setName.includes(searchTerm);
 				
-				// Search in both setlist name and song names/artists
-				if (setName.includes(searchTerm) || setSongs.includes(searchTerm)) {
-					card.style.display = 'block';
+				// If toggle is on, also search through song and artist names
+				if (searchSongs && !shouldShow && searchTerm !== '') {
+					const songArtistData = row.getAttribute('data-song-artist');
+					if (songArtistData && songArtistData.includes(searchTerm)) {
+						shouldShow = true;
+					}
+				}
+				
+				if (shouldShow) {
+					row.style.display = '';
 					visibleCount++;
 				} else {
-					card.style.display = 'none';
+					row.style.display = 'none';
 				}
 			});
 			
 			// Update the count display
-			const countElement = document.querySelector('.setlist-header p');
-			if (countElement) {
+			const resultsInfo = document.getElementById('resultsInfo');
+			if (resultsInfo) {
 				if (searchTerm === '') {
-					countElement.textContent = '<?php echo count($model->Setlists); ?> setlist<?php echo count($model->Setlists) != 1 ? 's' : ''; ?> found';
+					resultsInfo.textContent = '<?php echo count($model->Setlists); ?> setlist<?php echo count($model->Setlists) != 1 ? 's' : ''; ?> found';
 				} else {
-					countElement.textContent = visibleCount + ' setlist' + (visibleCount != 1 ? 's' : '') + ' found for "' + searchTerm + '"';
+					const searchType = searchSongs ? ' (including songs & artists)' : '';
+					resultsInfo.textContent = visibleCount + ' setlist' + (visibleCount != 1 ? 's' : '') + ' found for "' + searchTerm + '"' + searchType;
 				}
 			}
 			
 			// Re-sort the visible setlists after search
 			setTimeout(sortSetlists, 10);
-		});
-		
-		// Sort event listener
-		document.getElementById('sortSelect').addEventListener('change', sortSetlists);
+		}
 		
 		// Load setlist into the setlist manager
 		function loadSetlist(songs, name) {
