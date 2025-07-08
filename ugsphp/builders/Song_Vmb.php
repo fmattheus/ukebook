@@ -12,6 +12,11 @@ class Song_Vmb extends _base_Vmb {
 	 * @return Song_Vm
 	 */
 	public function Build() {
+		// Ensure session is started for setlist navigation
+		if (session_status() == PHP_SESSION_NONE) {
+			session_start();
+		}
+		
 		$filename = FileHelper::getFilename();
                 $fileContent = FileHelper::getFile(Config::$SongDirectory . $filename); 
 		$song = SongHelper::parseSong($fileContent);
@@ -53,50 +58,128 @@ class Song_Vmb extends _base_Vmb {
 				}
 			}
 		}
-		if (!empty($setlistFile) && isset($_SESSION['current_setlist'])) {
-			$setlistData = $_SESSION['current_setlist'];
-			$viewModel->IsSetlistNavigation = true;
-			$viewModel->SetlistName = $setlistData['name'];
-			$viewModel->SetlistSongs = $setlistData['songs'];
-			// Use setlist_index to determine current song
-			$currentIndex = $setlistIndex;
-			if ($currentIndex < 0 || $currentIndex >= count($setlistData['songs'])) {
-				$currentIndex = 0;
-			}
-			$viewModel->CurrentIndex = $currentIndex;
-			$viewModel->CurrentSongId = $setlistData['songs'][$currentIndex]['Uri'] ?? '';
-			// Set transpose value from setlist
-			$viewModel->Transpose = intval($setlistData['songs'][$currentIndex]['Transpose'] ?? 0);
-			// Set previous song
-			if ($currentIndex > 0) {
-				$prevSong = $setlistData['songs'][$currentIndex - 1];
-				$viewModel->PreviousSongId = $prevSong['Uri'] ?? '';
-				$viewModel->PreviousSongIndex = $currentIndex - 1;
-			}
-			// Set next song
-			if ($currentIndex < count($setlistData['songs']) - 1) {
-				$nextSong = $setlistData['songs'][$currentIndex + 1];
-				$viewModel->NextSongId = $nextSong['Uri'] ?? '';
-				$viewModel->NextSongIndex = $currentIndex + 1;
-			}
-			// Add instance info if song appears multiple times
-			$songUri = $setlistData['songs'][$currentIndex]['Uri'] ?? '';
-			$totalInstances = 0;
-			$instanceIndex = 0;
-			for ($i = 0; $i <= $currentIndex; $i++) {
-				if (($setlistData['songs'][$i]['Uri'] ?? '') === $songUri) {
-					$instanceIndex++;
+		
+		// Load setlist data if we have a setlist file
+		if (!empty($setlistFile)) {
+			$setlistData = null;
+			
+			// First try to get from session
+			if (isset($_SESSION['current_setlist'])) {
+				$setlistData = $_SESSION['current_setlist'];
+			} else {
+				// If not in session, load from file
+				$setlistDir = Config::$SongDirectory . 'setlists/';
+				$setlistPath = $setlistDir . $setlistFile;
+				
+				if (file_exists($setlistPath)) {
+					$content = file_get_contents($setlistPath);
+					$fileData = json_decode($content, true);
+					
+					if ($fileData && isset($fileData['name']) && isset($fileData['songs'])) {
+						// Convert song references to use Uri format for consistency
+						$processedSongs = array();
+						foreach ($fileData['songs'] as $song) {
+							$processedSong = $song;
+							if (isset($song['id']) && !isset($song['Uri'])) {
+								$processedSong['Uri'] = Ugs::MakeUri(Actions::Song, $song['id']);
+							}
+							$processedSongs[] = $processedSong;
+						}
+						
+						// Store in session for future use
+						$_SESSION['current_setlist'] = array(
+							'filename' => $setlistFile,
+							'name' => $fileData['name'],
+							'songs' => $processedSongs,
+							'current_index' => $setlistIndex
+						);
+						$setlistData = $_SESSION['current_setlist'];
+					}
 				}
 			}
-			foreach ($setlistData['songs'] as $song) {
-				if (($song['Uri'] ?? '') === $songUri) {
-					$totalInstances++;
+			
+			// If we have setlist data, set up navigation
+			if ($setlistData) {
+				$viewModel->IsSetlistNavigation = true;
+				$viewModel->SetlistName = $setlistData['name'];
+				$viewModel->SetlistSongs = $setlistData['songs'];
+				// Use setlist_index to determine current song
+				$currentIndex = $setlistIndex;
+				if ($currentIndex < 0 || $currentIndex >= count($setlistData['songs'])) {
+					$currentIndex = 0;
 				}
+				$viewModel->CurrentIndex = $currentIndex;
+				
+				// Get current song URI - handle different field formats
+				$currentSong = $setlistData['songs'][$currentIndex];
+				$currentSongUri = '';
+				if (isset($currentSong['Uri'])) {
+					$currentSongUri = $currentSong['Uri'];
+				} elseif (isset($currentSong['id'])) {
+					// Convert id to URI format
+					$currentSongUri = Ugs::MakeUri(Actions::Song, $currentSong['id']);
+				}
+				$viewModel->CurrentSongId = $currentSongUri;
+				
+				// Set transpose value from setlist
+				$viewModel->Transpose = intval($currentSong['Transpose'] ?? 0);
+				
+				// Set previous song
+				if ($currentIndex > 0) {
+					$prevSong = $setlistData['songs'][$currentIndex - 1];
+					$prevSongUri = '';
+					if (isset($prevSong['Uri'])) {
+						$prevSongUri = $prevSong['Uri'];
+					} elseif (isset($prevSong['id'])) {
+						$prevSongUri = Ugs::MakeUri(Actions::Song, $prevSong['id']);
+					}
+					$viewModel->PreviousSongId = $prevSongUri;
+					$viewModel->PreviousSongIndex = $currentIndex - 1;
+				}
+				
+				// Set next song
+				if ($currentIndex < count($setlistData['songs']) - 1) {
+					$nextSong = $setlistData['songs'][$currentIndex + 1];
+					$nextSongUri = '';
+					if (isset($nextSong['Uri'])) {
+						$nextSongUri = $nextSong['Uri'];
+					} elseif (isset($nextSong['id'])) {
+						$nextSongUri = Ugs::MakeUri(Actions::Song, $nextSong['id']);
+					}
+					$viewModel->NextSongId = $nextSongUri;
+					$viewModel->NextSongIndex = $currentIndex + 1;
+				}
+				
+				// Add instance info if song appears multiple times
+				$totalInstances = 0;
+				$instanceIndex = 0;
+				for ($i = 0; $i <= $currentIndex; $i++) {
+					$songUri = '';
+					if (isset($setlistData['songs'][$i]['Uri'])) {
+						$songUri = $setlistData['songs'][$i]['Uri'];
+					} elseif (isset($setlistData['songs'][$i]['id'])) {
+						$songUri = Ugs::MakeUri(Actions::Song, $setlistData['songs'][$i]['id']);
+					}
+					if ($songUri === $currentSongUri) {
+						$instanceIndex++;
+					}
+				}
+				foreach ($setlistData['songs'] as $song) {
+					$songUri = '';
+					if (isset($song['Uri'])) {
+						$songUri = $song['Uri'];
+					} elseif (isset($song['id'])) {
+						$songUri = Ugs::MakeUri(Actions::Song, $song['id']);
+					}
+					if ($songUri === $currentSongUri) {
+						$totalInstances++;
+					}
+				}
+				$viewModel->SongInstanceIndex = $instanceIndex;
+				$viewModel->SongInstanceTotal = $totalInstances;
+				// Update session with current index
+				$_SESSION['current_setlist']['current_index'] = $currentIndex;
 			}
-			$viewModel->SongInstanceIndex = $instanceIndex;
-			$viewModel->SongInstanceTotal = $totalInstances;
-			// Update session with current index
-			$_SESSION['current_setlist']['current_index'] = $currentIndex;
 		}
 		
 		return $viewModel;

@@ -338,7 +338,7 @@
 							<td class="setlist-meta"><?php echo htmlspecialchars($setlist['created']); ?></td>
 							<td class="actions-cell">
 								<button class="btn btn-primary" onclick="loadSetlist(<?php echo htmlspecialchars(json_encode($setlist['songs'])); ?>, '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Edit Setlist">Edit</button>
-								<button class="btn btn-success" onclick="startSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>')" title="Start Setlist">Start</button>
+								<button class="btn btn-success" onclick="startSetlistWithId(<?php echo htmlspecialchars(json_encode($setlist['songs'])); ?>, '<?php echo htmlspecialchars($setlist['filename']); ?>')" title="Start Setlist">Start</button>
 								<button class="btn btn-secondary" onclick="createPDF('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Create PDF">PDF</button>
 								<?php if ($model->CanEdit): ?>
 									<button class="btn btn-danger" onclick="deleteSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Delete Setlist">Del</button>
@@ -485,16 +485,60 @@
 			window.location.href = '<?php echo Ugs::MakeUri(Actions::Setlist); ?>';
 		}
 		
-		// Start a setlist
-		function startSetlist(filename) {
-			// Redirect to start setlist action
-			<?php if (Config::UseModRewrite): ?>
-				// For mod_rewrite, use pretty URL with query parameter
-				window.location.href = '<?php echo Ugs::MakeUri(Actions::StartSetlist); ?>?setlist=' + encodeURIComponent(filename);
-			<?php else: ?>
-				// For non-mod_rewrite, use query parameter format
-				window.location.href = '<?php echo Ugs::MakeUri(Actions::StartSetlist); ?>&setlist=' + encodeURIComponent(filename);
-			<?php endif; ?>
+		// Start a setlist by redirecting to the first song using its id
+		function startSetlistWithId(songs, filename) {
+			if (!songs || songs.length === 0) {
+				alert('No songs in setlist!');
+				return;
+			}
+			var firstSong = songs[0];
+			var songId = null;
+			
+			// Try to get song ID from various possible field formats
+			if (firstSong.id) {
+				songId = firstSong.id;
+			} else if (firstSong.Id) {
+				songId = firstSong.Id;
+			} else if (firstSong.ID) {
+				songId = firstSong.ID;
+			} else if (firstSong.Uri) {
+				// Extract filename from URI
+				var uri = firstSong.Uri;
+				var pathParts = uri.split('/');
+				var lastPart = pathParts[pathParts.length - 1];
+				// Remove any query parameters
+				songId = lastPart.split('?')[0];
+				// If it doesn't end with .cpm.txt, add it
+				if (!songId.endsWith('.cpm.txt')) {
+					songId += '.cpm.txt';
+				}
+			} else if (firstSong.uri) {
+				// Extract filename from URI (lowercase)
+				var uri = firstSong.uri;
+				var pathParts = uri.split('/');
+				var lastPart = pathParts[pathParts.length - 1];
+				// Remove any query parameters
+				songId = lastPart.split('?')[0];
+				// If it doesn't end with .cpm.txt, add it
+				if (!songId.endsWith('.cpm.txt')) {
+					songId += '.cpm.txt';
+				}
+			}
+			
+			if (!songId) {
+				alert('First song does not have an id or Uri!');
+				return;
+			}
+			
+			// For mod_rewrite, the URL should be: /songbook/songId?setlist=filename&setlist_index=0
+			// Remove .cpm.txt extension from songId for the URL
+			var urlSongId = songId;
+			if (urlSongId.endsWith('.cpm.txt')) {
+				urlSongId = urlSongId.slice(0, -8); // Remove '.cpm.txt'
+			}
+			var url = '<?php echo Ugs::MakeUri(Actions::Song, ''); ?>' + encodeURIComponent(urlSongId);
+			url += '?setlist=' + encodeURIComponent(filename) + '&setlist_index=0';
+			window.location.href = url;
 		}
 		
 		// Delete a setlist
