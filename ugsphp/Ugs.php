@@ -128,7 +128,8 @@ class Ugs{
 			Actions::CreatePDF,
 			Actions::ListPDFs,
 			Actions::DownloadPDF,
-			Actions::StartSetlist
+			Actions::StartSetlist,
+			Actions::ImportSpreadsheet
 		);
 		
 		if (in_array($action, $adminActions) && !$user->IsAdmin) {
@@ -195,6 +196,9 @@ class Ugs{
 				break;
 			case Actions::StartSetlist:
 				$builder = new StartSetlist_Vmb();
+				break;
+			case Actions::ImportSpreadsheet:
+				$builder = new ImportSpreadsheet_Vmb();
 				break;
 		        default:
         			$builder = Config::UseDetailedLists
@@ -304,6 +308,8 @@ class Ugs{
 				return 'download-pdf.php';
 			case Actions::StartSetlist:
 				return 'start-setlist.php';
+			case Actions::ImportSpreadsheet:
+				return 'import-spreadsheet.php';
 			default:
 				return Config::UseDetailedLists ? 'song-list-detailed.php' : 'song-list.php';
 		}

@@ -293,6 +293,7 @@
 				</div>
 				<div class="header-right">
 					<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::Setlist); ?>'" class="btn btn-success">➕ Create New Setlist</button>
+					<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::ImportSpreadsheet); ?>'" class="btn btn-primary">📊 Import Spreadsheet</button>
 					<button onclick="window.location.href='<?php echo Ugs::MakeUri(Actions::ListPDFs); ?>'" class="btn btn-secondary">📄 View PDFs</button>
 				</div>
 			</div>

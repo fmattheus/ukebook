@@ -24,6 +24,7 @@ final class Actions {
 	const ListPDFs = 14;
 	const DownloadPDF = 15;
 	const StartSetlist = 16;
+	const ImportSpreadsheet = 17;
 
 	/**
 	 * convert passed in string value to corresponding Actions enum
@@ -48,6 +49,7 @@ final class Actions {
 		 	case 'listpdfs': return self::ListPDFs;
 		 	case 'downloadpdf': return self::DownloadPDF;
 		 	case 'startsetlist': return self::StartSetlist;
+		 	case 'importspreadsheet': return self::ImportSpreadsheet;
 		 }
 		 return self::Songbook;
 	}
@@ -75,6 +77,7 @@ final class Actions {
 			case self::ListPDFs: return 'ListPDFs';
 			case self::DownloadPDF: return 'DownloadPDF';
 			case self::StartSetlist: return 'StartSetlist';
+			case self::ImportSpreadsheet: return 'ImportSpreadsheet';
 		}
 		return 'Songbook';
 	}
