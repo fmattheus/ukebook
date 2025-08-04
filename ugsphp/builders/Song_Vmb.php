@@ -12,10 +12,6 @@ class Song_Vmb extends _base_Vmb {
 	 * @return Song_Vm
 	 */
 	public function Build() {
-		// Ensure session is started for setlist navigation
-		if (session_status() == PHP_SESSION_NONE) {
-			session_start();
-		}
 		
 		$filename = FileHelper::getFilename();
                 $fileContent = FileHelper::getFile(Config::$SongDirectory . $filename); 
@@ -43,10 +39,16 @@ class Song_Vmb extends _base_Vmb {
 		$viewModel->EditorSettingsJson = $this->getSettings();
 		
 		// Check if this is part of a setlist navigation
-		$setlistFile = isset($_GET['setlist']) ? $_GET['setlist'] : '';
-		$setlistIndex = isset($_GET['setlist_index']) ? intval($_GET['setlist_index']) : 0;
+		$setlistFile = '';
+		$setlistIndex = 0;
+		
+		// First try to get from GET parameters
+		if (isset($_GET['setlist'])) {
+			$setlistFile = $_GET['setlist'];
+			$setlistIndex = isset($_GET['setlist_index']) ? intval($_GET['setlist_index']) : 0;
+		}
 		// If no setlist in GET, try to get it from the URL path (for mod_rewrite)
-		if (empty($setlistFile)) {
+		elseif (empty($setlistFile)) {
 			$requestUri = $_SERVER['REQUEST_URI'];
 			$path = parse_url($requestUri, PHP_URL_PATH);
 			$pathParts = explode('/', trim($path, '/'));
@@ -63,38 +65,32 @@ class Song_Vmb extends _base_Vmb {
 		if (!empty($setlistFile)) {
 			$setlistData = null;
 			
-			// First try to get from session
-			if (isset($_SESSION['current_setlist'])) {
-				$setlistData = $_SESSION['current_setlist'];
-			} else {
-				// If not in session, load from file
-				$setlistDir = Config::$SongDirectory . 'setlists/';
-				$setlistPath = $setlistDir . $setlistFile;
+			// Always load from file - no session dependency
+			$setlistDir = Config::$SongDirectory . 'setlists/';
+			$setlistPath = $setlistDir . $setlistFile;
+			
+			if (file_exists($setlistPath)) {
+				$content = file_get_contents($setlistPath);
+				$fileData = json_decode($content, true);
 				
-				if (file_exists($setlistPath)) {
-					$content = file_get_contents($setlistPath);
-					$fileData = json_decode($content, true);
-					
-					if ($fileData && isset($fileData['name']) && isset($fileData['songs'])) {
-						// Convert song references to use Uri format for consistency
-						$processedSongs = array();
-						foreach ($fileData['songs'] as $song) {
-							$processedSong = $song;
-							if (isset($song['id']) && !isset($song['Uri'])) {
-								$processedSong['Uri'] = Ugs::MakeUri(Actions::Song, $song['id']);
-							}
-							$processedSongs[] = $processedSong;
+				if ($fileData && isset($fileData['name']) && isset($fileData['songs'])) {
+					// Convert song references to use Uri format for consistency
+					$processedSongs = array();
+					foreach ($fileData['songs'] as $song) {
+						$processedSong = $song;
+						if (isset($song['id']) && !isset($song['Uri'])) {
+							$processedSong['Uri'] = Ugs::MakeUri(Actions::Song, $song['id']);
 						}
-						
-						// Store in session for future use
-						$_SESSION['current_setlist'] = array(
-							'filename' => $setlistFile,
-							'name' => $fileData['name'],
-							'songs' => $processedSongs,
-							'current_index' => $setlistIndex
-						);
-						$setlistData = $_SESSION['current_setlist'];
+						$processedSongs[] = $processedSong;
 					}
+					
+					// Create setlist data without storing in session
+					$setlistData = array(
+						'filename' => $setlistFile,
+						'name' => $fileData['name'],
+						'songs' => $processedSongs,
+						'current_index' => $setlistIndex
+					);
 				}
 			}
 			
@@ -133,6 +129,10 @@ class Song_Vmb extends _base_Vmb {
 					} elseif (isset($prevSong['id'])) {
 						$prevSongUri = Ugs::MakeUri(Actions::Song, $prevSong['id']);
 					}
+					// Add setlist parameters to previous song URL (only if not already present)
+					if (strpos($prevSongUri, 'setlist=') === false) {
+						$prevSongUri .= (strpos($prevSongUri, '?') !== false ? '&' : '?') . 'setlist=' . urlencode($setlistFile) . '&setlist_index=' . ($currentIndex - 1);
+					}
 					$viewModel->PreviousSongId = $prevSongUri;
 					$viewModel->PreviousSongIndex = $currentIndex - 1;
 				}
@@ -145,6 +145,10 @@ class Song_Vmb extends _base_Vmb {
 						$nextSongUri = $nextSong['Uri'];
 					} elseif (isset($nextSong['id'])) {
 						$nextSongUri = Ugs::MakeUri(Actions::Song, $nextSong['id']);
+					}
+					// Add setlist parameters to next song URL (only if not already present)
+					if (strpos($nextSongUri, 'setlist=') === false) {
+						$nextSongUri .= (strpos($nextSongUri, '?') !== false ? '&' : '?') . 'setlist=' . urlencode($setlistFile) . '&setlist_index=' . ($currentIndex + 1);
 					}
 					$viewModel->NextSongId = $nextSongUri;
 					$viewModel->NextSongIndex = $currentIndex + 1;
@@ -177,8 +181,7 @@ class Song_Vmb extends _base_Vmb {
 				}
 				$viewModel->SongInstanceIndex = $instanceIndex;
 				$viewModel->SongInstanceTotal = $totalInstances;
-				// Update session with current index
-				$_SESSION['current_setlist']['current_index'] = $currentIndex;
+				// No longer updating session - using GET parameters instead
 			}
 		}
 		

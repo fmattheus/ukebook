@@ -9,10 +9,6 @@ class StartSetlist_Vmb extends _base_Vmb {
 	 * Populates StartSetlist View Model and redirects to first song
 	 */
 	public function Build() {
-		// Ensure session is started
-		if (session_status() == PHP_SESSION_NONE) {
-			session_start();
-		}
 		
 		// Include SongHelper for parsing songs
 		require_once Config::$AppDirectory . 'classes/SongHelper.php';
@@ -20,10 +16,14 @@ class StartSetlist_Vmb extends _base_Vmb {
 		$viewModel = new StartSetlist_Vm();
 		
 		// Get setlist filename from query parameter or URL path
-		$setlistFile = isset($_GET['setlist']) ? $_GET['setlist'] : '';
+		$setlistFile = '';
 		
+		// First try to get from GET parameters
+		if (isset($_GET['setlist'])) {
+			$setlistFile = $_GET['setlist'];
+		}
 		// If no setlist in GET, try to get it from the URL path (for mod_rewrite)
-		if (empty($setlistFile)) {
+		elseif (empty($setlistFile)) {
 			// Parse the URL to get the setlist filename from the path
 			$requestUri = $_SERVER['REQUEST_URI'];
 			$path = parse_url($requestUri, PHP_URL_PATH);
@@ -107,26 +107,20 @@ class StartSetlist_Vmb extends _base_Vmb {
 			exit();
 		}
 		
-		// Store setlist data in session for navigation
-		$_SESSION['current_setlist'] = array(
-			'filename' => $setlistFile,
-			'name' => $setlistData['name'],
-			'songs' => $setlistData['songs'],
-			'current_index' => 0
-		);
+		// No longer storing setlist data in session - using GET parameters instead
 		
 		// Redirect to the first song with setlist parameter
 		if (!empty($songUri)) {
 			// Use the URI directly from the setlist
 			$redirectUrl = $songUri;
-			$redirectUrl .= '?setlist=' . urlencode($setlistFile);
+			$redirectUrl .= '?setlist=' . urlencode($setlistFile) . '&setlist_index=0';
 		} else {
 			// Fall back to using Ugs::MakeUri for other cases
 			$redirectUrl = Ugs::MakeUri(Actions::Song, $firstSongId);
 			if (Config::UseModRewrite) {
-				$redirectUrl .= '?setlist=' . urlencode($setlistFile);
+				$redirectUrl .= '?setlist=' . urlencode($setlistFile) . '&setlist_index=0';
 			} else {
-				$redirectUrl .= '&setlist=' . urlencode($setlistFile);
+				$redirectUrl .= '&setlist=' . urlencode($setlistFile) . '&setlist_index=0';
 			}
 		}
 		

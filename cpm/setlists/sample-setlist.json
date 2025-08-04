@@ -1,0 +1,26 @@
+{
+  "name": "Sample Setlist",
+  "created": "2024-01-15 10:30:00",
+  "songs": [
+    {
+      "id": "my-little-grass-shack-in-kealakekua.cpm.txt",
+      "title": "My Little Grass Shack in Kealakekua",
+      "artist": "Traditional"
+    },
+    {
+      "id": "snow-by-irving-berlin.cpm.txt",
+      "title": "Snow by Irving Berlin",
+      "artist": "Irving Berlin"
+    },
+    {
+      "id": "space-oddity-bowie.cpm.txt",
+      "title": "Space Oddity",
+      "artist": "David Bowie"
+    },
+    {
+      "id": "the-state-im-in-dog-on-wheels.cpm.txt",
+      "title": "The State I'm In",
+      "artist": "Dog on Wheels"
+    }
+  ]
+} 

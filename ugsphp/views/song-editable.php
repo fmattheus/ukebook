@@ -199,22 +199,14 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 		<?php
 		// Previous link (if not first song)
 		if (!empty($model->PreviousSongId) && $model->CurrentIndex > 0) {
-			$prevUrl = $model->PreviousSongId;
-			$setlistParam = Config::UseModRewrite ? '?setlist=' : '&setlist=';
-			$prevUrl .= $setlistParam . urlencode($_GET['setlist'] ?? '');
-			$prevUrl .= '&setlist_index=' . urlencode($model->PreviousSongIndex);
-			echo '<a href="' . htmlspecialchars($prevUrl) . '" class="nav-link prev-link">&larr; Previous Song</a>';
+			echo '<a href="' . htmlspecialchars($model->PreviousSongId) . '" class="nav-link prev-link">&larr; Previous Song</a>';
 		}
 		// Next link (if not last song)
 		if (!empty($model->NextSongId) && $model->CurrentIndex < count($model->SetlistSongs) - 1) {
 			$nextSong = $model->SetlistSongs[$model->CurrentIndex + 1];
 			$nextTitle = isset($nextSong['Title']) ? $nextSong['Title'] : (isset($nextSong['title']) ? $nextSong['title'] : '');
 			$nextArtist = isset($nextSong['Artist']) ? $nextSong['Artist'] : (isset($nextSong['artist']) ? $nextSong['artist'] : '');
-			$nextUrl = $model->NextSongId;
-			$setlistParam = Config::UseModRewrite ? '?setlist=' : '&setlist=';
-			$nextUrl .= $setlistParam . urlencode($_GET['setlist'] ?? '');
-			$nextUrl .= '&setlist_index=' . urlencode($model->NextSongIndex);
-			echo '<a href="' . htmlspecialchars($nextUrl) . '" class="nav-link next-link">Next: ' . htmlspecialchars($nextTitle);
+			echo '<a href="' . htmlspecialchars($model->NextSongId) . '" class="nav-link next-link">Next: ' . htmlspecialchars($nextTitle);
 			if ($nextArtist) echo ' <span style="color:#888;">by ' . htmlspecialchars($nextArtist) . '</span>';
 			echo ' &rarr;</a>';
 		}
