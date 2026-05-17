@@ -156,6 +156,35 @@ ugsEditorPlus.options = {
 	 */
 	commonChords: []
 };
+
+ugsEditorPlus.sessionPreferences = (function() {
+	var STORAGE_KEY = 'ukebook_preferences';
+	var KEYS = ['fontSize', 'diagramSize', 'diagramPosition', 'lyricStyle', 'paper', 'theme', 'tuning', 'hideChordEnclosures', 'sortAlphabetical', 'ignoreCommonChords', 'commonChords'];
+
+	var _public = {};
+
+	_public.save = function() {
+		var prefs = {};
+		var opts = ugsEditorPlus.options;
+		for (var i = 0; i < KEYS.length; i++) {
+			prefs[KEYS[i]] = opts[KEYS[i]];
+		}
+		try {
+			sessionStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+		} catch(e) {}
+	};
+
+	_public.load = function() {
+		try {
+			var stored = sessionStorage.getItem(STORAGE_KEY);
+			return stored ? JSON.parse(stored) : {};
+		} catch(e) {
+			return {};
+		}
+	};
+
+	return _public;
+}());
 ;/**
  * Does the work by providing "doAction" method to respond to events (does not
  * attach event handlers); Modifes some page elements -- adjust CSS classes on page,
@@ -240,22 +269,28 @@ ugsEditorPlus.actions = (function() {
 		switch (action) {
 			case 'zoomFonts':
 				doSetFontSize(value);
+				ugsEditorPlus.options.fontSize = parseFloat(value);
 				break;
 			case 'zoomDiagrams':
 				doSetDiagramSize(value);
+				ugsEditorPlus.options.diagramSize = parseInt(value, 10);
 				break;
 			case 'layout':
 				doLayout(value);
+				ugsEditorPlus.options.diagramPosition = value;
 				break;
 			case 'placement':
 				runRequired = doPlacement(value);
+				ugsEditorPlus.options.lyricStyle = value;
 				break;
 			case 'tuning':
 				doTuning(value);
+				ugsEditorPlus.options.tuning = value;
 				runRequired = true;
 				break;
 			case 'colors':
 				doSetTheme(value);
+				ugsEditorPlus.options.theme = value;
 				runRequired = true;
 				break;
 			case 'transpose':
@@ -263,21 +298,26 @@ ugsEditorPlus.actions = (function() {
 				break;
 			case 'paper':
 				doSetPageWidth(value);
+				ugsEditorPlus.options.paper = value;
 				break;
 			case 'showEnclosures':
 				setEnclosureVisible(value);
+				ugsEditorPlus.options.hideChordEnclosures = !value;
 				runRequired = true;
 				break;
 			case 'hideCommonChords':
 				setIgnoreCommon(value);
+				ugsEditorPlus.options.ignoreCommonChords = value;
 				runRequired = true;
 				break;
 			case 'sortAlphabetical':
 				setSortAlphabetical(value);
+				ugsEditorPlus.options.sortAlphabetical = value;
 				runRequired = true;
 				break;
 			case 'setCommonChords':
 				setCommonChordsList(value);
+				ugsEditorPlus.options.commonChords = ukeGeeks.settings.commonChords;
 				runRequired = ukeGeeks.settings.opts.ignoreCommonChords;
 				break;
 			case 'update':
@@ -286,6 +326,8 @@ ugsEditorPlus.actions = (function() {
 			default:
 				console.log('Unrecognized ' + action + ' > ' + value);
 		}
+
+		ugsEditorPlus.sessionPreferences.save();
 
 		if (runRequired) {
 			_public.run();
@@ -2542,7 +2584,9 @@ ugsEditorPlus.songAmatic = (function() {
 			commonChords: ukeGeeks.settings.commonChords
 		};
 
-		return $.extend(ugsEditorPlus.options, opts, (typeof options === "object") ? options : {});
+		$.extend(ugsEditorPlus.options, opts, (typeof options === "object") ? options : {});
+		$.extend(ugsEditorPlus.options, ugsEditorPlus.sessionPreferences.load());
+		return ugsEditorPlus.options;
 	};
 
 	// ---------------------------------------

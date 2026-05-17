@@ -138,3 +138,32 @@ ugsEditorPlus.options = {
 	 */
 	commonChords: []
 };
+
+ugsEditorPlus.sessionPreferences = (function() {
+	var STORAGE_KEY = 'ukebook_preferences';
+	var KEYS = ['fontSize', 'diagramSize', 'diagramPosition', 'lyricStyle', 'paper', 'theme', 'tuning', 'hideChordEnclosures', 'sortAlphabetical', 'ignoreCommonChords', 'commonChords'];
+
+	var _public = {};
+
+	_public.save = function() {
+		var prefs = {};
+		var opts = ugsEditorPlus.options;
+		for (var i = 0; i < KEYS.length; i++) {
+			prefs[KEYS[i]] = opts[KEYS[i]];
+		}
+		try {
+			sessionStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+		} catch(e) {}
+	};
+
+	_public.load = function() {
+		try {
+			var stored = sessionStorage.getItem(STORAGE_KEY);
+			return stored ? JSON.parse(stored) : {};
+		} catch(e) {
+			return {};
+		}
+	};
+
+	return _public;
+}());

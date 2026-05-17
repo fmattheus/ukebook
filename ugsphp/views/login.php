@@ -86,6 +86,8 @@ ugsLogin = (function(){
 
 ugsLogin.init();
 
+sessionStorage.removeItem('ukebook_preferences');
+
 </script>
 </body>
 </html>

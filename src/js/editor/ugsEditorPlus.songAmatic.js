@@ -44,7 +44,9 @@ ugsEditorPlus.songAmatic = (function() {
 			commonChords: ukeGeeks.settings.commonChords
 		};
 
-		return $.extend(ugsEditorPlus.options, opts, (typeof options === "object") ? options : {});
+		$.extend(ugsEditorPlus.options, opts, (typeof options === "object") ? options : {});
+		$.extend(ugsEditorPlus.options, ugsEditorPlus.sessionPreferences.load());
+		return ugsEditorPlus.options;
 	};
 
 	// ---------------------------------------
