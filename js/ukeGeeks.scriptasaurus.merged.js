@@ -1452,7 +1452,7 @@ ukeGeeks.definitions.sopranoUkuleleGcea = [
 	// -------------------------------------------------------
 	'{define: D frets 2 2 2 0}',
 	'{define: Dm frets 2 2 1 0}',
-	'{define: Dm6 frets 0 2 1 2}',
+	'{define: Dm6 frets 2 2 1 2}',
 	'{define: D7 frets 2 2 2 3}',
 	'{define: D7sus4 frets 2 2 3 3}',
 	'{define: Dm7 frets 2 2 1 3}',
