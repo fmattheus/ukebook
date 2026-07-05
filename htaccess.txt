@@ -30,5 +30,6 @@ RewriteRule ^listpdfs/?$ /music.php?action=listpdfs [L,QSA]
 RewriteRule ^downloadpdf/?$ /music.php?action=downloadpdf [L,QSA]
 RewriteRule ^startsetlist/?$ /music.php?action=startsetlist [L,QSA]
 RewriteRule ^importspreadsheet/?$ /music.php?action=importspreadsheet [L,QSA]
+RewriteRule ^video/?$ music.php?action=video [L,QSA]
 
 </IfModule>

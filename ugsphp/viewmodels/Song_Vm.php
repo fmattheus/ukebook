@@ -16,6 +16,11 @@ class Song_Vm extends _base_Vm {
 
 	public $Id = '';
 
+	/** Base song filename without extension, used for video URLs */
+	public $SongId = '';
+	public $HasTutorial = false;
+	public $HasPlayalong = false;
+
 	/**
 	 * URL where "New Song" AJAX is sent.
 	 * -- Only used if Editing is enabled and user has permission.

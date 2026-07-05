@@ -17,6 +17,12 @@ class Ugs{
 		// Reads query param to pick appropriate Actions
 		$action = isset( $_GET['action'] ) ? Actions::ToEnum( $_GET['action'] ) : Actions::Songbook;
 
+		// Video streaming — handle before auth since it's a binary response
+		if ( $action === Actions::Video ) {
+			$this->StreamVideo();
+			return;
+		}
+
 		$user = $this->DoAuthenticate( $action );
 		if ( !$user->IsAllowAccess  ) {
 				return;
@@ -46,6 +52,80 @@ class Ugs{
 		include_once Config::$AppDirectory . 'views/' . $this->GetViewName( $action );
 	}
 
+
+	/**
+	 * Streams a .tutorial.* or .playalong.* video file from the song directory.
+	 * Supports HTTP range requests so browsers can seek.
+	 */
+	private function StreamVideo() {
+		$type = isset($_GET['type']) ? $_GET['type'] : '';
+		$song = isset($_GET['song']) ? $_GET['song'] : '';
+
+		if (!in_array($type, array('tutorial', 'playalong'))) {
+			http_response_code(400); return;
+		}
+
+		$song = preg_replace('/[^a-zA-Z0-9._-]/', '', basename($song));
+		if (empty($song)) {
+			http_response_code(400); return;
+		}
+
+		Config::Init();
+		$videoDir = dirname(rtrim(Config::$SongDirectory, '/')) . '/Videos/';
+		$matches = glob($videoDir . $song . '.' . $type . '.*');
+		if (empty($matches)) {
+			http_response_code(404); return;
+		}
+
+		$filePath = realpath($matches[0]);
+		if ($filePath === false || strpos($filePath, realpath($videoDir)) !== 0) {
+			http_response_code(404); return;
+		}
+
+		$ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+		$mimeMap = array(
+			'mp4' => 'video/mp4', 'm4v' => 'video/mp4',
+			'webm' => 'video/webm',
+			'ogv' => 'video/ogg', 'ogg' => 'video/ogg',
+			'mov' => 'video/quicktime',
+		);
+		$mimeType = isset($mimeMap[$ext]) ? $mimeMap[$ext] : 'video/mp4';
+
+		$fileSize = filesize($filePath);
+		$start = 0;
+		$end   = $fileSize - 1;
+
+		header('Accept-Ranges: bytes');
+		header('Content-Type: ' . $mimeType);
+
+		if (isset($_SERVER['HTTP_RANGE']) && preg_match('/bytes=(\d*)-(\d*)/', $_SERVER['HTTP_RANGE'], $m)) {
+			$start = $m[1] !== '' ? intval($m[1]) : 0;
+			$end   = $m[2] !== '' ? intval($m[2]) : $fileSize - 1;
+			if ($start > $end || $end >= $fileSize) {
+				http_response_code(416);
+				header('Content-Range: bytes */' . $fileSize);
+				return;
+			}
+			http_response_code(206);
+			header('Content-Range: bytes ' . $start . '-' . $end . '/' . $fileSize);
+		} else {
+			http_response_code(200);
+		}
+
+		$length = $end - $start + 1;
+		header('Content-Length: ' . $length);
+
+		$fp = fopen($filePath, 'rb');
+		fseek($fp, $start);
+		$sent = 0;
+		while (!feof($fp) && $sent < $length) {
+			$chunk = min(8192, $length - $sent);
+			echo fread($fp, $chunk);
+			$sent += $chunk;
+			flush();
+		}
+		fclose($fp);
+	}
 
 	/**
 	 * Emits serilized JSON version of the $model with appropriate headers

@@ -170,6 +170,49 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 	}
 }
 <?php endif; ?>
+.video-links { font-size: 0.85em; margin-top: 0.3em; }
+.video-links a { margin-right: 1em; }
+/* Floating video player */
+#videoPlayerDlg {
+	position: fixed;
+	top: 80px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 640px;
+	max-width: 95vw;
+	background: #1a1a1a;
+	border-radius: 8px;
+	box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+	z-index: 9999;
+	display: none;
+}
+.vp-header {
+	background: #333;
+	padding: 8px 12px;
+	border-radius: 8px 8px 0 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: move;
+	user-select: none;
+}
+.vp-title { color: #fff; font-weight: bold; font-size: 14px; font-family: Arial, sans-serif; }
+.vp-close {
+	background: none;
+	border: none;
+	color: #aaa;
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0 2px;
+}
+.vp-close:hover { color: #fff; }
+#videoPlayerDlg video {
+	display: block;
+	width: 100%;
+	border-radius: 0 0 8px 8px;
+}
+@media print { #videoPlayerDlg, .video-links { display: none !important; } }
 </style>
 </head>
 <body class="editableSongPage pageWidth_screen<?php if ($model->IsSetlistNavigation) echo ' hasSetlistNav'; ?>">
@@ -229,6 +272,16 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 					<h2 id="songAlbum" class="ugs-songAlbum" style="display:<?php echo(GetDisplayStyle($model->Album)); ?>;">
 						<?php echo($model->Album); ?>
 					</h2>
+					<?php if ($model->HasTutorial || $model->HasPlayalong): ?>
+					<div class="video-links">
+						<?php if ($model->HasTutorial): ?>
+							<a href="#" data-video-type="tutorial" data-song-id="<?php echo htmlspecialchars($model->SongId); ?>">&#9654; Tutorial</a>
+						<?php endif; ?>
+						<?php if ($model->HasPlayalong): ?>
+							<a href="#" data-video-type="playalong" data-song-id="<?php echo htmlspecialchars($model->SongId); ?>">&#9654; Play Along</a>
+						<?php endif; ?>
+					</div>
+					<?php endif; ?>
 				</hgroup>
 			</div>
 			<div style="text-align: right; margin-top: 0.5em;">
@@ -574,5 +627,62 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+<?php if ($model->HasTutorial || $model->HasPlayalong): ?>
+<!-- Floating video player -->
+<div id="videoPlayerDlg">
+	<div class="vp-header">
+		<span class="vp-title" id="videoPlayerTitle">Video</span>
+		<button class="vp-close" id="videoPlayerClose" title="Close">&times;</button>
+	</div>
+	<video id="videoElement" controls preload="metadata"></video>
+</div>
+<script>
+(function() {
+	var dlg    = document.getElementById('videoPlayerDlg');
+	var video  = document.getElementById('videoElement');
+	var title  = document.getElementById('videoPlayerTitle');
+	var header = dlg.querySelector('.vp-header');
+	var dragging = false, ox, oy;
+
+	document.addEventListener('click', function(e) {
+		var btn = e.target;
+		while (btn && !btn.getAttribute('data-video-type')) btn = btn.parentElement;
+		if (!btn) return;
+		e.preventDefault();
+		var type   = btn.getAttribute('data-video-type');
+		var songId = btn.getAttribute('data-song-id');
+		title.textContent = type === 'tutorial' ? 'Tutorial' : 'Play Along';
+		video.src = 'music.php?action=video&song=' + encodeURIComponent(songId) + '&type=' + type;
+		video.load();
+		video.play();
+		dlg.style.display = 'block';
+	});
+
+	document.getElementById('videoPlayerClose').addEventListener('click', function() {
+		video.pause();
+		video.removeAttribute('src');
+		video.load();
+		dlg.style.display = 'none';
+	});
+
+	header.addEventListener('mousedown', function(e) {
+		dragging = true;
+		var r = dlg.getBoundingClientRect();
+		dlg.style.transform = 'none';
+		dlg.style.left = r.left + 'px';
+		dlg.style.top  = r.top  + 'px';
+		ox = e.clientX - r.left;
+		oy = e.clientY - r.top;
+		e.preventDefault();
+	});
+	document.addEventListener('mousemove', function(e) {
+		if (!dragging) return;
+		dlg.style.left = (e.clientX - ox) + 'px';
+		dlg.style.top  = (e.clientY - oy) + 'px';
+	});
+	document.addEventListener('mouseup', function() { dragging = false; });
+})();
+</script>
+<?php endif; ?>
 </body>
 </html>

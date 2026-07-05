@@ -36,6 +36,12 @@ class Song_Vmb extends _base_Vmb {
 		$viewModel->Id = $filename;
         $viewModel->IsUpdateAllowed = $this->SiteUser->MayEdit && $this->SiteUser->IsAuthenticated && !(!$this->SiteUser->IsAdmin && $song->reputation);
 
+		$songBasename = str_replace(Config::FileExtension, '', $filename);
+		$viewModel->SongId = $songBasename;
+		$videoDir = dirname(rtrim(Config::$SongDirectory, '/')) . '/Videos/';
+		$viewModel->HasTutorial  = !empty(glob($videoDir . $songBasename . '.tutorial.*'));
+		$viewModel->HasPlayalong = !empty(glob($videoDir . $songBasename . '.playalong.*'));
+
 		$viewModel->EditorSettingsJson = $this->getSettings();
 		
 		// Check if this is part of a setlist navigation

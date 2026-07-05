@@ -25,6 +25,7 @@ final class Actions {
 	const DownloadPDF = 15;
 	const StartSetlist = 16;
 	const ImportSpreadsheet = 17;
+	const Video = 18;
 
 	/**
 	 * convert passed in string value to corresponding Actions enum
@@ -50,6 +51,7 @@ final class Actions {
 		 	case 'downloadpdf': return self::DownloadPDF;
 		 	case 'startsetlist': return self::StartSetlist;
 		 	case 'importspreadsheet': return self::ImportSpreadsheet;
+		 	case 'video': return self::Video;
 		 }
 		 return self::Songbook;
 	}
