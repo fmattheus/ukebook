@@ -352,19 +352,18 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 			<dt><label for="fontSizePicker"><span>Font size 12pt</span> <em>&#9658;</em></label></dt>
 			<dd id="fontSizePicker" data-action="zoomFonts">
 				<ul class="pseudoSelect">
-					<li><a href="#6">6 pt </a></li>
-					<li><a href="#6.5">6.5 pt </a></li>
-					<li><a href="#7">7 pt </a></li>
-					<li><a href="#7.5">7.5 pt </a></li>
-					<li><a href="#8">8 pt </a></li>
-					<li><a href="#8.5">8.5 pt </a></li>
 					<li><a href="#9">9 pt </a></li>
-					<li><a href="#9.5">9.5 pt </a></li>
 					<li><a href="#10">10 pt </a></li>
 					<li><a href="#11">11 pt </a></li>
 					<li class="checked"><a href="#12">12 pt </a></li>
 					<li><a href="#13">13 pt </a></li>
 					<li><a href="#14">14 pt </a></li>
+					<li><a href="#15">15 pt </a></li>
+					<li><a href="#16">16 pt </a></li>
+					<li><a href="#17">17 pt </a></li>
+					<li><a href="#18">18 pt </a></li>
+					<li><a href="#19">19 pt </a></li>
+					<li><a href="#20">20 pt </a></li>
 				</ul>
 			</dd>
 			<dt><label for="diagramSizePicker"><span>Stupid Large diagrams</span> <em>&#9658;</em></label></dt>

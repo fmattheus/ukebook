@@ -7,7 +7,7 @@
 	// "showEditOnLoad": true,
 
 	/* Lyric's font size (pts)
-	 * Allowed values (number): 6, 6.5, 7, 7.5, 8, 8.5, 9, 10, 11, 12, 13, 14
+	 * Allowed values (number): 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
 	 */
 	// "fontSize": 12,
 
