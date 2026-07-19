@@ -17,9 +17,18 @@ header hgroup h2 {
 .ugsSongHeaderMeta {
 	display: none;
 }
+/* flexbox isn't reliable in wkhtmltopdf's print engine, so this uses floats
+   (as the diagrams column below already does) instead of display:flex */
+.ugsHeadingTempoRow {
+	overflow: hidden; /* contain the floats */
+	padding-right: 32px; /* aligns with the diagrams column's right edge (no exact matching value found elsewhere; happens to be 2x the 16px lyrics/diagrams gutter in ugsEditorPlus.print.css) */
+}
+.ugsHeadingTempoRow h2 {
+	float: left;
+}
 .tempo-display-print {
 	display: inline !important;
-	margin-left: 1em;
+	float: right;
 	color: #888;
 	font-size: 0.9em;
 	font-family: Arial, sans-serif;

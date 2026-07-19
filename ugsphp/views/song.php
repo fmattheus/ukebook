@@ -144,8 +144,8 @@ header aside a{
 <body>
 <section>
 	<header>
-		<div class="ugsSongHeader" style="display: flex; justify-content: space-between; align-items: flex-start;">
-			<div class="ugsSongHeaderInfo" style="flex: 1;">
+		<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+			<div style="flex: 1;">
 				<hgroup>
 					<aside>
 						<a href="<?php echo($model->EditUri); ?>" title="switch to Edit/Customize view (great for Print!)">Customize</a>
@@ -157,12 +157,14 @@ header aside a{
 					$printTempoHost = (strlen($model->Artist) > 0) ? 'artist' : (strlen($model->Subtitle) > 0 ? 'subtitle' : null);
 					?>
 					<?php if (strlen($model->Artist) > 0): ?>
+						<?php if ($model->Tempo > 0 && $printTempoHost === 'artist'): ?><div class="ugsHeadingTempoRow"><?php endif; ?>
 						<h2 class="ugsArtist">
 							<?php echo($model->Artist); ?>
-							<?php if ($model->Tempo > 0 && $printTempoHost === 'artist'): ?>
-								<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
-							<?php endif; ?>
 						</h2>
+						<?php if ($model->Tempo > 0 && $printTempoHost === 'artist'): ?>
+							<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
+						</div>
+						<?php endif; ?>
 					<?php endif; ?>
 					<?php if ($model->HasTutorial || $model->HasPlayalong): ?>
 					<div class="video-links">
@@ -174,12 +176,14 @@ header aside a{
 						<?php endif; ?>
 					</div>
 					<?php endif; ?>
+					<?php if ($model->Tempo > 0 && $printTempoHost === 'subtitle'): ?><div class="ugsHeadingTempoRow"><?php endif; ?>
 					<h2 class="ugsSubtitle">
 						<?php echo($model->Subtitle); ?>
-						<?php if ($model->Tempo > 0 && $printTempoHost === 'subtitle'): ?>
-							<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
-						<?php endif; ?>
 					</h2>
+					<?php if ($model->Tempo > 0 && $printTempoHost === 'subtitle'): ?>
+						<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
+					</div>
+					<?php endif; ?>
 					<?php if (strlen($model->Album) > 0): ?>
 						<h3 class="ugsAlbum"><?php echo($model->Album); ?></h3>
 					<?php endif; ?>

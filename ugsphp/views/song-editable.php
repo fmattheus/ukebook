@@ -262,22 +262,26 @@ $printTempoHost = (strlen($model->Artist) > 0) ? 'artist' : (strlen($model->Subt
 <?php endif; ?>
 <section id="scalablePrintArea" class="scalablePrintArea">
 	<header>
-		<div class="ugsSongHeader" style="display: flex; justify-content: space-between; align-items: flex-start;">
-			<div class="ugsSongHeaderInfo" style="flex: 1;">
+		<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+			<div style="flex: 1;">
 				<hgroup class="ugs-songInfo">
 					<h1 id="songTitle" class="ugs-songTitle"><?php echo($model->SongTitle); ?></h1>
+					<?php if ($model->Tempo > 0 && $printTempoHost === 'subtitle'): ?><div class="ugsHeadingTempoRow"><?php endif; ?>
 					<h2 id="songSubtitle" class="ugs-songSubtitle" style="display:<?php echo(GetDisplayStyle($model->Subtitle)); ?>;">
 						<?php echo($model->Subtitle); ?>
-						<?php if ($model->Tempo > 0 && $printTempoHost === 'subtitle'): ?>
-							<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
-						<?php endif; ?>
 					</h2>
+					<?php if ($model->Tempo > 0 && $printTempoHost === 'subtitle'): ?>
+						<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
+					</div>
+					<?php endif; ?>
+					<?php if ($model->Tempo > 0 && $printTempoHost === 'artist'): ?><div class="ugsHeadingTempoRow"><?php endif; ?>
 					<h2 id="songArtist" class="ugs-songArtist" style="display:<?php echo(GetDisplayStyle($model->Artist)); ?>;">
 						<?php echo($model->Artist); ?>
-						<?php if ($model->Tempo > 0 && $printTempoHost === 'artist'): ?>
-							<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
-						<?php endif; ?>
 					</h2>
+					<?php if ($model->Tempo > 0 && $printTempoHost === 'artist'): ?>
+						<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
+					</div>
+					<?php endif; ?>
 					<h2 id="songAlbum" class="ugs-songAlbum" style="display:<?php echo(GetDisplayStyle($model->Album)); ?>;">
 						<?php echo($model->Album); ?>
 					</h2>
