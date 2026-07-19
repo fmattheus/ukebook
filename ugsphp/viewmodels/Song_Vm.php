@@ -51,6 +51,9 @@ class Song_Vm extends _base_Vm {
 	public $SongInstanceTotal = 0;
 	public $Transpose = 0;
 
+	/** Font size (pt), set via ?fontSize= URL parameter; 0 means "no override" */
+	public $FontSize = 0;
+
 	function __construct()
 	{
 		parent::__construct();

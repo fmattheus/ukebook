@@ -352,6 +352,9 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 			<dt><label for="fontSizePicker"><span>Font size 12pt</span> <em>&#9658;</em></label></dt>
 			<dd id="fontSizePicker" data-action="zoomFonts">
 				<ul class="pseudoSelect">
+					<li><a href="#6">6 pt </a></li>
+					<li><a href="#7">7 pt </a></li>
+					<li><a href="#8">8 pt </a></li>
 					<li><a href="#9">9 pt </a></li>
 					<li><a href="#10">10 pt </a></li>
 					<li><a href="#11">11 pt </a></li>
@@ -578,6 +581,25 @@ $(function() {
 	<?php
 	}
 ?>
+
+<?php if ($model->FontSize > 0): ?>
+	// Auto-apply font size from URL parameter
+	(function() {
+		var fontSizeValue = <?php echo $model->FontSize; ?>;
+
+		$.event.trigger('option:click', {
+			action: 'zoomFonts',
+			value: fontSizeValue
+		});
+
+		var fontSizePicker = $('#fontSizePicker');
+		if (fontSizePicker.length) {
+			fontSizePicker.find('li').removeClass('checked');
+			fontSizePicker.find('a[href="#' + fontSizeValue + '"]').parent().addClass('checked');
+			fontSizePicker.find('span').text('Font size ' + fontSizeValue + 'pt');
+		}
+	})();
+<?php endif; ?>
 
 <?php if ($model->IsSetlistNavigation && $model->Transpose != 0): ?>
 	// Auto-trigger transpose if setlist has a non-zero transpose value

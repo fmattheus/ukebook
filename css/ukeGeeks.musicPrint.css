@@ -6,6 +6,12 @@ body {
 header hgroup aside{
 	display:none;
 }
+header hgroup h1 {
+	font-size: 1.7em;
+}
+header hgroup h2 {
+	font-size: 1.2em;
+}
 /* Pagebreaks
   ------------------------------ */
 .ugsNewPage{
@@ -33,11 +39,12 @@ header hgroup aside{
 }
 /* TABS
   ------------------------------ */
-/* wkhtmltopdf on this server only seems to supprt DejaVu Sans Mono as a mono font, and needs a larger font ... */
+/* wkhtmltopdf on this server only seems to supprt DejaVu Sans Mono as a mono font, and needs a larger font ...
+   sized relative to the normal body font (40% larger) so it still tracks the selected font size */
 .ugs-song-wrap .ugsTabs {
       margin:0.6em;
       padding:0;
-      font-family:'DejaVu Sans Mono';
-      font-size: 17pt;
+      font-family: 'DejaVu Sans Mono', Monaco, Consolas, 'Lucida Console', 'Courier New', Courier, monospace;
+      font-size: 1.4em;
       page-break-inside : avoid;
 }

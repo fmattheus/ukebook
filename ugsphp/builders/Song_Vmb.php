@@ -43,7 +43,15 @@ class Song_Vmb extends _base_Vmb {
 		$viewModel->HasPlayalong = !empty(glob($videoDir . $songBasename . '.playalong.*'));
 
 		$viewModel->EditorSettingsJson = $this->getSettings();
-		
+
+		// Allow font size to be set/overridden via URL, eg ?fontSize=16
+		if (isset($_GET['fontSize'])) {
+			$requestedFontSize = floatval($_GET['fontSize']);
+			if ($requestedFontSize >= 6 && $requestedFontSize <= 40) {
+				$viewModel->FontSize = $requestedFontSize;
+			}
+		}
+
 		// Check if this is part of a setlist navigation
 		$setlistFile = '';
 		$setlistIndex = 0;

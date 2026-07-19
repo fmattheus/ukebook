@@ -56,11 +56,11 @@ a {
 }
 .songList li {
 	color: #A8A8A8;
-	font-size: 10px;
+	font-size: 12px;
 	list-style: decimal outside none;
-	margin-bottom: 0.35em;
+	margin-bottom: 0.15em;
 	margin-left: 20px;
-	padding: 0.35em 0;
+	padding: 0.15em 0;
 }
 .songList li:hover {
 	background-color: #FFECC7;
