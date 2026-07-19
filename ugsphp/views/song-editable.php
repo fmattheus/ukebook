@@ -6,6 +6,9 @@ function GetDisplayStyle($value){
 
 $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 
+// print-only: Tempo shares the Artist line (falling back to Subtitle) rather than the title/diagrams column
+$printTempoHost = (strlen($model->Artist) > 0) ? 'artist' : (strlen($model->Subtitle) > 0 ? 'subtitle' : null);
+
 ?>
 <!DOCTYPE HTML>
 <html lang="en">
@@ -259,15 +262,21 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 <?php endif; ?>
 <section id="scalablePrintArea" class="scalablePrintArea">
 	<header>
-		<div style="display: flex; justify-content: space-between; align-items: flex-start;">
-			<div style="flex: 1;">
+		<div class="ugsSongHeader" style="display: flex; justify-content: space-between; align-items: flex-start;">
+			<div class="ugsSongHeaderInfo" style="flex: 1;">
 				<hgroup class="ugs-songInfo">
 					<h1 id="songTitle" class="ugs-songTitle"><?php echo($model->SongTitle); ?></h1>
 					<h2 id="songSubtitle" class="ugs-songSubtitle" style="display:<?php echo(GetDisplayStyle($model->Subtitle)); ?>;">
 						<?php echo($model->Subtitle); ?>
+						<?php if ($model->Tempo > 0 && $printTempoHost === 'subtitle'): ?>
+							<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
+						<?php endif; ?>
 					</h2>
 					<h2 id="songArtist" class="ugs-songArtist" style="display:<?php echo(GetDisplayStyle($model->Artist)); ?>;">
 						<?php echo($model->Artist); ?>
+						<?php if ($model->Tempo > 0 && $printTempoHost === 'artist'): ?>
+							<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
+						<?php endif; ?>
 					</h2>
 					<h2 id="songAlbum" class="ugs-songAlbum" style="display:<?php echo(GetDisplayStyle($model->Album)); ?>;">
 						<?php echo($model->Album); ?>
@@ -284,7 +293,7 @@ $editDlgCssClassName = $model->IsUpdateAllowed ? '' : 'isHidden';
 					<?php endif; ?>
 				</hgroup>
 			</div>
-			<div style="text-align: right; margin-top: 0.5em;">
+			<div class="ugsSongHeaderMeta" style="text-align: right; margin-top: 0.5em;">
 				<?php if (strlen($model->Gema) > 0): ?>
 					<div class="gema-display">GEMA: <?php echo htmlspecialchars($model->Gema); ?></div>
 				<?php endif; ?>

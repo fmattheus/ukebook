@@ -144,16 +144,25 @@ header aside a{
 <body>
 <section>
 	<header>
-		<div style="display: flex; justify-content: space-between; align-items: flex-start;">
-			<div style="flex: 1;">
+		<div class="ugsSongHeader" style="display: flex; justify-content: space-between; align-items: flex-start;">
+			<div class="ugsSongHeaderInfo" style="flex: 1;">
 				<hgroup>
 					<aside>
 						<a href="<?php echo($model->EditUri); ?>" title="switch to Edit/Customize view (great for Print!)">Customize</a>
 						<a href="<?php echo($model->SourceUri); ?>" target="_blank" title="view original song text">Source</a>
 					</aside>
 					<h1 class="ugsSongTitle"><?php echo($model->SongTitle); ?></h1>
+					<?php
+					// print-only: Tempo shares the Artist line (falling back to Subtitle) rather than the title/diagrams column
+					$printTempoHost = (strlen($model->Artist) > 0) ? 'artist' : (strlen($model->Subtitle) > 0 ? 'subtitle' : null);
+					?>
 					<?php if (strlen($model->Artist) > 0): ?>
-						<h2 class="ugsArtist"><?php echo($model->Artist); ?></h2>
+						<h2 class="ugsArtist">
+							<?php echo($model->Artist); ?>
+							<?php if ($model->Tempo > 0 && $printTempoHost === 'artist'): ?>
+								<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
+							<?php endif; ?>
+						</h2>
 					<?php endif; ?>
 					<?php if ($model->HasTutorial || $model->HasPlayalong): ?>
 					<div class="video-links">
@@ -165,13 +174,18 @@ header aside a{
 						<?php endif; ?>
 					</div>
 					<?php endif; ?>
-					<h2 class="ugsSubtitle"><?php echo($model->Subtitle); ?></h2>
+					<h2 class="ugsSubtitle">
+						<?php echo($model->Subtitle); ?>
+						<?php if ($model->Tempo > 0 && $printTempoHost === 'subtitle'): ?>
+							<span class="tempo-display-print" style="display:none;">Tempo: <?php echo($model->Tempo); ?></span>
+						<?php endif; ?>
+					</h2>
 					<?php if (strlen($model->Album) > 0): ?>
 						<h3 class="ugsAlbum"><?php echo($model->Album); ?></h3>
 					<?php endif; ?>
 				</hgroup>
 			</div>
-			<div style="text-align: right; margin-top: 0.5em;">
+			<div class="ugsSongHeaderMeta" style="text-align: right; margin-top: 0.5em;">
 				<?php if (strlen($model->Gema) > 0): ?>
 					<div class="gema-display">GEMA: <?php echo htmlspecialchars($model->Gema); ?></div>
 				<?php endif; ?>

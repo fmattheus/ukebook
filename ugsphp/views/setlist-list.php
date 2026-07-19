@@ -340,7 +340,7 @@
 							<td class="actions-cell">
 								<button class="btn btn-primary" onclick="loadSetlist(<?php echo htmlspecialchars(json_encode($setlist['songs'])); ?>, '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Edit Setlist">Edit</button>
 								<button class="btn btn-success" onclick="startSetlistWithId(<?php echo htmlspecialchars(json_encode($setlist['songs'])); ?>, '<?php echo htmlspecialchars($setlist['filename']); ?>')" title="Start Setlist">Start</button>
-								<button class="btn btn-secondary" onclick="createPDF('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Create PDF">PDF</button>
+								<button class="btn btn-secondary" onclick="createPDF('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Create PDF">Create PDF</button>
 								<?php if ($model->CanEdit): ?>
 									<button class="btn btn-danger" onclick="deleteSetlist('<?php echo htmlspecialchars($setlist['filename']); ?>', '<?php echo htmlspecialchars($setlist['name']); ?>')" title="Delete Setlist">Del</button>
 								<?php endif; ?>

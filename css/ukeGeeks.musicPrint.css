@@ -12,6 +12,18 @@ header hgroup h1 {
 header hgroup h2 {
 	font-size: 1.2em;
 }
+/* GEMA/Tempo column isn't needed on printed/PDF copies; Tempo is shown instead
+   inline with the Artist/Subtitle line (see .tempo-display-print). */
+.ugsSongHeaderMeta {
+	display: none;
+}
+.tempo-display-print {
+	display: inline !important;
+	margin-left: 1em;
+	color: #888;
+	font-size: 0.9em;
+	font-family: Arial, sans-serif;
+}
 /* Pagebreaks
   ------------------------------ */
 .ugsNewPage{

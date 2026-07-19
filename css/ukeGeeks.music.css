@@ -11,6 +11,10 @@
 .ugs-song-wrap {
 	font-size: 100%;
 }
+/* print-only duplicate of Tempo, shown inline with Artist/Subtitle in print (see ukeGeeks.musicPrint.css) */
+.tempo-display-print {
+	display: none;
+}
 .ugs-song-wrap,
 .ugs-song-wrap h5,
 .ugs-song-wrap h6,
